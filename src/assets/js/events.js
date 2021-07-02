@@ -146,6 +146,8 @@ window.addEventListener( 'load', () => {
         document.querySelector(".wrapper-admin").hidden = true;
     });
 
+    
+
     //
 
 } );
