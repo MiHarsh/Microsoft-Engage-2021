@@ -1,15 +1,32 @@
 {
-  "name": "videochat",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "Video-Chat-Application",
+  "version": "0.0.1",
+  "description": "A conference call implementation using WebRTC, Socket.io and Node.js.",
+  "main": "src/app.js",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^4.1.2"
-  }
+    "serve-favicon": "^2.5.0",
+    "socket.io": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "scripts": {
+    "watch": "nodemon --watch \"src/\" --exec \"node src/app.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MiHarsh/Microsoft-Engage-2021.git"
+  },
+  "keywords": [
+    "LiveStream",
+    "Server"
+  ],
+  "author": "Harsh Mishra <harshm17172612@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MiHarsh/Microsoft-Engage-2021/issues"
+  },
+  "homepage": "https://github.com/MiHarsh/Microsoft-Engage-2021#readme"
 }
