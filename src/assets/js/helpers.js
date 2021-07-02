@@ -7,8 +7,8 @@ export default {
     generateRandomString() {
         const crypto = window.crypto || window.msCrypto;
         let array = new Uint32Array(1);
-        let alphabets = "abcdefghiklmnopqrstuvwxyz"
-        let meeting_code = ""
+        let alphabets = "abcdefghiklmnopqrstuvwxyz";
+        let meeting_code = "";
         let random_numbers = String(crypto.getRandomValues(array)[0]);
         for(let i=0;i< random_numbers.length;i++){
 
@@ -355,4 +355,14 @@ export default {
             elem[i].style.width = newWidth;
         }
     },
+
+    // will display the popup --->
+    askForPoll(){
+        document.querySelector(".wrapper").hidden = false;
+    },
+
+    // pollListeners(){
+
+    // }
+
 };

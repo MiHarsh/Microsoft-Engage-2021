@@ -1,10 +1,10 @@
-/**
- * @author Amir Sanni <amirsanni@gmail.com>
- * @date 6th January, 2020
- */
+let isAdmin = false;
+let startTime = "";
 import h from './helpers.js';
 
 window.addEventListener( 'load', () => {
+
+    console.log("defined just now");
     const room = h.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
 
@@ -24,8 +24,7 @@ window.addEventListener( 'load', () => {
         }
 
         var pc = [];
-
-
+        
         let socket = io( '/stream' );
 
         var socketId = '';
@@ -41,13 +40,53 @@ window.addEventListener( 'load', () => {
         socket.on( 'connect', () => {
             //set socketId
             socketId = socket.io.engine.id;
-
+            console.log("connecteed");
 
             socket.emit( 'subscribe', {
                 room: room,
                 socketId: socketId,
                 username: username
             } );
+
+            // admin would trigger the timer popup, since he'll be present before others join
+            socket.on( 'iAmAdmin',()=>{
+                isAdmin = true;
+                startTime = Date.now();
+                console.log("welcome admin");
+
+                const interval = setInterval(()=>{
+                    if((Date.now() - startTime) > 60*1000){
+                        socket.emit("sendPollToEveryUser",room);
+                        clearInterval(interval);
+                        console.log("send everyone");
+                    }
+                },1000);
+
+            });
+
+
+            // when everyone recieves trigger to show poll
+
+            socket.on('openYourPolls',()=>{
+                h.askForPoll(); // will unhide polling
+
+                document.getElementById("need-break").addEventListener('click',()=>{
+                    document.querySelector(".wrapper").hidden = true;
+                    socket.emit("recievedPoll",{"vote":1,"room":room});
+                });
+                document.getElementById("no-break").addEventListener('click',()=>{
+                    document.querySelector(".wrapper").hidden = true;
+                    socket.emit("recievedPoll",{"vote":0,"room":room});
+                });
+            });
+
+            // tell admin to give break :)
+            socket.on('adminGiveABreak',()=>{
+                if(isAdmin){
+                    document.querySelector(".wrapper-admin").hidden = false;
+                }
+            });
+
 
 
             socket.on( 'new user', ( data ) => {

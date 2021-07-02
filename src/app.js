@@ -1,5 +1,8 @@
 // to store names mapped with their socket Ids-->
-var mapSocketWithNames = {}
+var mapSocketWithNames = {};
+
+var vote_counts = {} ;
+
 // #############################
 
 
@@ -45,14 +48,24 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         socket.join( data.room );
         socket.join( data.socketId );
 
+        // if a room doesn't exist, then vote_counts should be zero
+
+        if(!vote_counts[data.room]){
+            vote_counts[data.room] = 0;
+        }
+
         // map name and socketID
         mapSocketWithNames[data.socketId] = data.username;
-        console.log(mapSocketWithNames);
 
 
         //Inform other members in the room of new user's arrival
         if ( socket.adapter.rooms[data.room].length > 1 ) {
             socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
+        }
+        else{
+            // if only single user is present, he'll be admin --->
+            socket.emit('iAmAdmin');
+            
         }
     });
 
@@ -99,6 +112,21 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
     // send usernames to clients -->
     socket.on('UpdateNamesOfUsers',()=>{
         socket.emit('UpdateNamesOfUsers',mapSocketWithNames);
+    });
+
+    socket.on('sendPollToEveryUser',(room)=>{
+        socket.to(room).emit("openYourPolls");
+    });
+
+    socket.on('recievedPoll',(data)=>{
+
+        vote_counts[data.room] += data.vote;
+
+        if(2*vote_counts[data.room] +1 >socket.adapter.rooms[data.room].length){
+            socket.to(data.room).emit("adminGiveABreak");
+            vote_counts[data.room] = 0;
+        }
+        
     });
 
 });

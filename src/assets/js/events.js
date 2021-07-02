@@ -106,6 +106,8 @@ window.addEventListener( 'load', () => {
         else {
             document.querySelector( '#err-msg-username' ).innerHTML = "Please input your name";
         }
+
+
         
     } );
 
@@ -137,6 +139,11 @@ window.addEventListener( 'load', () => {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
+    });
+
+    // close the `have-a-break` popup
+    document.getElementById("break-notif-admin").addEventListener('click',()=>{
+        document.querySelector(".wrapper-admin").hidden = true;
     });
 
     //
