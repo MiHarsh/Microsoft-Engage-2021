@@ -405,7 +405,7 @@ window.addEventListener( 'load', () => {
         }
 
 
-        //Chat textarea
+        //Chat Section #####################################################################
         document.getElementById( 'chat-input' ).addEventListener( 'keypress', ( e ) => {
             if ( e.which === 13 && ( e.target.value.trim() ) ) {
                 e.preventDefault();
@@ -417,6 +417,23 @@ window.addEventListener( 'load', () => {
                 }, 50 );
             }
         } );
+
+        document.getElementById( 'chat-icon-send' ).addEventListener( 'click', ( e ) => {
+            let text_elem = document.getElementById( 'chat-input' );
+
+            if( text_elem.value !== '' ){
+                e.preventDefault();
+
+                sendMsg(text_elem.value);
+
+                setTimeout( () => {
+                    text_elem.value = '';
+                }, 50 );
+            }
+        } );
+
+        // #####################################################################
+
 
 
         //When the video icon is clicked
