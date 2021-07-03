@@ -20,7 +20,7 @@
     </head>
 
     <body >
-        <div class="custom-modal" id='recording-options-modal'>
+        <!-- <div class="custom-modal" id='recording-options-modal'>
             <div class="custom-modal-content">
                 <div class="row text-center">
                     <div class="col-md-6 mb-2">
@@ -37,7 +37,21 @@
                     </div>
                 </div>
             </div>
+        </div> -->
+
+        <div class="page-wrapper bg1" id='recording-options-modal' >
+            <div class="p-4 bg-changer" > 
+                <div class="form-group col-md-12 pt-2" >
+                    <button class="btn-sm btn-outline-info rounded-lg mr-4" id='record-video'>Record Video</button>
+                    <button class="btn-sm btn-outline-info rounded-lg" id='record-screen'>Record Screen</button>
+                </div> 
+                <button class="btn-sm btn-outline-danger rounded-lg" id='closeModal'>close</button>
+                
+                
+            </div>
         </div>
+
+
         
         
         <nav class="navbar fixed-bottom badge-dark bg-dark rounded-0 d-print-none res-nav room-comm" hidden>
@@ -157,6 +171,21 @@
         </div>
 
         <!-- Ends Here -->
+
+        <!-- bg changer  -->
+        <div class="page-wrapper bg1" >
+            <div class="p-4 bg-changer" hidden>
+                <div class="form-group col-md-12 pt-2" >
+                    <a href="#" data-bg="bg1" class="theme theme-bg  "></a>
+                    <a href="#" data-bg="bg2" class="theme theme-bg selected"></a>
+                    <a href="#" data-bg="bg3" class="theme theme-bg"></a>
+                    <a href="#" data-bg="bg4" class="theme theme-bg"></a>
+                </div> 
+                <button class="btn-sm btn-outline-danger rounded-lg">close</button>   
+            </div>
+        </div>
+
+        <!-- ends here -->
 
 
         

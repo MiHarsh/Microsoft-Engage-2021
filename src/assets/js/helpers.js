@@ -184,7 +184,7 @@ export default {
         let chatMsgDiv = document.querySelector( '#chat-messages' );
         let contentAlign = 'justify-content-end';
         let senderName = 'You';
-        let msgBg = 'bg-secondary';
+        let msgBg = 'bg-light';
 
         if ( senderType === 'remote' ) {
             contentAlign = 'justify-content-start';
@@ -199,8 +199,8 @@ export default {
         infoDiv.innerHTML = `${ senderName } - ${ moment().format( 'Do MMMM, YYYY h:mm a' ) }`;
 
         let colDiv = document.createElement( 'div' );
-        colDiv.className = `col-10 card chat-card msg ${ msgBg }`;
-        colDiv.innerHTML = xssFilters.inHTMLData( data.msg ).autoLink( { target: "_blank", rel: "nofollow"});
+        colDiv.className = `col-10 card chat-card msg text-info ${ msgBg }`;
+        colDiv.innerHTML = xssFilters.inHTMLData( data.msg ).autoLink( { class: "text-info" , target: "_blank", rel: "nofollow"});
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;
