@@ -107,6 +107,22 @@
     border-radius: 8px;
 }
 
+/* css for displaying remote names */
+.participant-names{
+    position:absolute;
+    top:88%;
+    left:17%;
+    transform: translate(-50%,-50%);
+    background-color:rgba(0, 0, 0, 0.5);
+    z-index:299999;
+    padding: 10px 10px;
+    min-width: 80px;
+    width:25%;
+    text-align: center;
+    color:white;
+    border-radius: 8px;
+}
+
 
 .remote-video:hover + .remote-video-controls,
 .remote-video-controls:hover{

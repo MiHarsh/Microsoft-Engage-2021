@@ -255,6 +255,7 @@ window.addEventListener( 'load', () => {
 
                     // show user names 
                     let nameDiv = document.createElement( 'div' );
+                    nameDiv.className = 'participant-names';
                     nameDiv.id = `${partnerName}-username`;
 
                     //create a new div for card
@@ -551,6 +552,6 @@ window.addEventListener( 'load', () => {
                     startRecording( videoStream );
                 } ).catch( () => { } );
             }
-        } );
+        });
     }
 } );
