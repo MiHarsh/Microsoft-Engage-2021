@@ -40,7 +40,6 @@ window.addEventListener( 'load', () => {
         socket.on( 'connect', () => {
             //set socketId
             socketId = socket.io.engine.id;
-            console.log("connecteed");
 
             socket.emit( 'subscribe', {
                 room: room,
@@ -63,6 +62,48 @@ window.addEventListener( 'load', () => {
                 },1000);
 
             });
+
+            // ask admin to join the room , give permission to admin only
+
+            socket.on('request-admin',(data)=>{
+                if(isAdmin){
+                    let userName_admit = data.username;
+                    let socketid_admit = data.socketId;
+    
+                    let base_container = document.getElementById("admit-requests");
+                    let newRequestElement = document.createElement("div");
+                    newRequestElement.id = "admit-lobby-element" + socketid_admit;
+    
+                    newRequestElement.innerHTML = ` <div class="poll-box" >
+                    <div class="poll-container">
+                        <div class="poll-question">Admit ${userName_admit} ?</div>
+                        <div class="poll-panel row mt-30">
+                            <div class="btn poll-panel-btn" aria-role="button" data-result="0" data-vote="0" id="admit${socketid_admit}"  > <span>Yes</span></div>
+                            <div class="btn poll-panel-btn" aria-role="button" data-result="0" data-vote="1" id="dont-admit${socketid_admit}" > <span>No</span></div>
+                        </div>
+                    </div>
+                    </div>`;
+    
+                    base_container.appendChild(newRequestElement);
+    
+                    // add eventlistners to allow admin accept peoples --->
+                    document.getElementById("admit"+socketid_admit).addEventListener('click',()=>{
+                        document.getElementById("admit-lobby-element"+socketid_admit).hidden = true;
+                        socket.emit("access-granted",data);
+                    });
+    
+                    document.getElementById("dont-admit"+socketid_admit).addEventListener('click',()=>{
+                        document.getElementById("admit-lobby-element"+socketid_admit).hidden = true;
+                        socket.emit("access-denied");
+                    });
+                }
+            });
+
+            socket.on('access has been granted',(data)=>{
+                socket.emit('alert-other-users',data);
+            });
+
+            
 
 
             // when everyone recieves trigger to show poll
@@ -90,6 +131,7 @@ window.addEventListener( 'load', () => {
 
 
             socket.on( 'new user', ( data ) => {
+                console.log(data);
                 socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
                 pc.push( data.socketId );
                 init( true, data.socketId );

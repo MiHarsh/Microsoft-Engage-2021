@@ -1,6 +1,6 @@
 // to store names mapped with their socket Ids-->
 var mapSocketWithNames = {};
-
+let adminOfRoom = {};
 var vote_counts = {} ;
 
 // #############################
@@ -44,9 +44,26 @@ app.get( '/join', ( req, res ) => {
 
 io.of( '/stream' ).on( 'connection', (socket)=>{
     socket.on( 'subscribe', ( data ) => {
-        //subscribe/join a room
-        socket.join( data.room );
-        socket.join( data.socketId );
+
+        socket.join( data.socketId ); // only join the sockets, room will be joined once admin admits.
+
+        // at the beginning, subscribe to admin only 
+        if(!socket.adapter.rooms[data.room]){
+            //subscribe/join a room
+            socket.join( data.room );
+        
+            adminOfRoom[data.room] = data.socketId;
+
+            // if only single user is present, he'll be admin --->
+            socket.emit('iAmAdmin');
+
+            console.log(socket.adapter.rooms);
+        }
+        else{
+            //Inform admin in the room of new user's arrival
+            socket.to(adminOfRoom[data.room]).emit('request-admin',data); // ask admin for entering to room.
+        }
+
 
         // if a room doesn't exist, then vote_counts should be zero
 
@@ -57,16 +74,25 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         // map name and socketID
         mapSocketWithNames[data.socketId] = data.username;
 
+    });
 
-        //Inform other members in the room of new user's arrival
-        if ( socket.adapter.rooms[data.room].length > 1 ) {
-            socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
-        }
-        else{
-            // if only single user is present, he'll be admin --->
-            socket.emit('iAmAdmin');
-            
-        }
+    // if access is granted, the user can connect// here this socket is admin one
+    // so admin would inform the requesting participant that -- access has been granted
+    socket.on('access-granted',(data)=>{
+        socket.to( data.socketId ).emit( 'access has been granted',data);
+    });
+
+    // after access has been granted, join the room, and inform other users;
+    socket.on('alert-other-users',(data)=>{
+
+        // participants join the room
+        socket.join( data.room );
+        socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
+    });
+
+    // if admin denies the permission
+    socket.on('access-denied',()=>{
+        console.log("Access denied by user");
     });
 
     // send details of new user to previously present sockets
@@ -96,8 +122,15 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
     // simple socket.io chat app, here only one namespace and room is present.  
     socket.on( 'chat', ( data ) => {
-        console.log(data);
-        socket.to( data.room ).emit( 'chat', { sender: data.sender, msg: data.msg } );
+
+        // send message only if socket is present in the room
+        // ie. user has admitted him
+
+        if(socket.adapter.rooms[data.room].sockets[socket.id] ){
+            socket.to( data.room ).emit( 'chat', { sender: data.sender, msg: data.msg } );
+        }
+
+        
     } );
 
 
@@ -128,6 +161,9 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         }
         
     });
+
+
+
 
 });
 
