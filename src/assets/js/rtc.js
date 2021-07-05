@@ -75,13 +75,13 @@ window.addEventListener( 'load', () => {
                     
                     let base_container = document.getElementById("user-admit");
                     let newRequestElement = document.createElement("div");
-                    newRequestElement.className = 'row user-admit-childs';
+                    newRequestElement.className = 'row user-admit-childs mx-auto';
                     newRequestElement.id = roomName_admit + "@" + userName_admit +"@" + socketid_admit;
                     
-                    newRequestElement.innerHTML = `<div class="col-9">${userName_admit}</div>
-                    <div class="col-3">
-                      <a class="px-2 deny-request" style="text-decoration: none;">Deny</a>
-                      <a class="px-1 accept-request" style="text-decoration: none;">Admit</a>
+                    newRequestElement.innerHTML = `<div class="col-9 col-md-9 col-xs-8 col-lg-9 col-sm-7 pl-5 px-0"><b>${userName_admit}</b></div>
+                    <div class="col-3 col-md-3 col-lg-3 col-sm-5 text-center col-xs-4 px-0">
+                      <a class="px-1 deny-request" style="text-decoration: none;color: blue;" >Deny</a>
+                      <a class="px-1 accept-request" style="text-decoration: none;color: blue;">Admit</a>
                     </div>
                     <hr>`;
                     

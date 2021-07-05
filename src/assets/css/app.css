@@ -440,3 +440,12 @@ width: 100%; }
   
   [data-bg="bg4"] {
     background-image: url("https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDF8fGJhY2tncm91bmR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60"); }
+
+
+/* css for admit popup */
+
+@media  (min-width:768px){
+    .admit{
+        width: 45%;
+    }
+    }
