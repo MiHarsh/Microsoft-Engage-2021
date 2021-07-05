@@ -11,8 +11,9 @@ var vote_counts = {} ;
 let express = require( 'express' );
 let app = express();
 let socketio = require( 'socket.io' );
+const port = process.env.PORT || 3000
 
-const expressServer = app.listen(3000);
+const expressServer = app.listen(port);
 const io = socketio(expressServer);
 
 let path = require( 'path' );
