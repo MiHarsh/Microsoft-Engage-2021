@@ -86,6 +86,10 @@ window.addEventListener( 'load', () => {
                     <hr>`;
                     
                     base_container.appendChild(newRequestElement);
+                    // play tone to remind admit when someone sends admit request
+                    let audio = new Audio('../assets/tones/admit-request.mp3');
+                    audio.play();
+
 
                     if(base_container.children.length > 1){
                         document.getElementById("who").innerText = "Multiple People want";
@@ -210,6 +214,11 @@ window.addEventListener( 'load', () => {
 
 
             socket.on( 'new user', ( data ) => {
+
+                // play tone to remind admit when someone joins the meet
+                let audio = new Audio('../assets/tones/user-joined.mp3');
+                audio.play();
+
                 console.log(data);
                 socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
                 pc.push( data.socketId );
