@@ -188,12 +188,19 @@ export default {
 
 
     addChat( data, senderType ) {
+
+
         let chatMsgDiv = document.querySelector( '#chat-messages' );
         let contentAlign = 'justify-content-end';
         let senderName = 'You';
         let msgBg = 'bg-light';
 
         if ( senderType === 'remote' ) {
+
+            // notify when new message arrives
+            let audio = new Audio('../assets/tones/message.mp3');
+            audio.play();
+
             contentAlign = 'justify-content-start';
             senderName = data.sender;
             msgBg = '';
@@ -207,7 +214,7 @@ export default {
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg text-info ${ msgBg }`;
-        colDiv.innerHTML = xssFilters.inHTMLData( data.msg ).autoLink( { class: "text-info" , target: "_blank", rel: "nofollow"});
+        colDiv.innerHTML = `<b>${xssFilters.inHTMLData( data.msg ).autoLink( { class: "text-info" , target: "_blank", rel: "nofollow"})}</b>`;
 
         let rowDiv = document.createElement( 'div' );
         rowDiv.className = `row ${ contentAlign } mb-2`;
