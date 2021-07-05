@@ -12,7 +12,7 @@
     "nodemon": "^2.0.6"
   },
   "scripts": {
-    "start": "nodemon --watch \"src/\" --exec \"node src/app.js\"",
+    "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
