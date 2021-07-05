@@ -69,35 +69,114 @@ window.addEventListener( 'load', () => {
                 if(isAdmin){
                     let userName_admit = data.username;
                     let socketid_admit = data.socketId;
-    
-                    let base_container = document.getElementById("admit-requests");
+                    let roomName_admit = data.room;
+
+                    // ############################### Fresh Code ###########################
+                    
+                    let base_container = document.getElementById("user-admit");
                     let newRequestElement = document.createElement("div");
-                    newRequestElement.id = "admit-lobby-element" + socketid_admit;
-    
-                    newRequestElement.innerHTML = ` <div class="poll-box" >
-                    <div class="poll-container">
-                        <div class="poll-question">Admit ${userName_admit} ?</div>
-                        <div class="poll-panel row mt-30">
-                            <div class="btn poll-panel-btn" aria-role="button" data-result="0" data-vote="0" id="admit${socketid_admit}"  > <span>Yes</span></div>
-                            <div class="btn poll-panel-btn" aria-role="button" data-result="0" data-vote="1" id="dont-admit${socketid_admit}" > <span>No</span></div>
-                        </div>
+                    newRequestElement.className = 'row user-admit-childs';
+                    newRequestElement.id = roomName_admit + "@" + userName_admit +"@" + socketid_admit;
+                    
+                    newRequestElement.innerHTML = `<div class="col-9">${userName_admit}</div>
+                    <div class="col-3">
+                      <a class="px-2 deny-request" style="text-decoration: none;">Deny</a>
+                      <a class="px-1 accept-request" style="text-decoration: none;">Admit</a>
                     </div>
-                    </div>`;
-    
+                    <hr>`;
+                    
                     base_container.appendChild(newRequestElement);
-    
-                    // add eventlistners to allow admin accept peoples --->
-                    document.getElementById("admit"+socketid_admit).addEventListener('click',()=>{
-                        document.getElementById("admit-lobby-element"+socketid_admit).hidden = true;
+
+                    if(base_container.children.length > 1){
+                        document.getElementById("who").innerText = "Multiple People want";
+                        document.getElementById("deny-all").innerText = "Deny All";
+                        document.getElementById("view-all").innerText = "View All";
+                        document.getElementById("admit-all").innerText = "Admit All";
+                    }
+                    else{
+                        document.getElementById("who").innerText = "Someone wants";
+                        document.getElementById("deny-all").innerText = "Deny";
+                        document.getElementById("view-all").innerText = "View";
+                        document.getElementById("admit-all").innerText = "Admit";
+                    }
+
+                    document.getElementById('user-lobby').hidden = false;
+
+                    let userDenyElement = newRequestElement.children[1].children[0];
+                    let userAcceptElement = newRequestElement.children[1].children[1];
+                    
+
+                    userDenyElement.addEventListener('click',()=>{
+
+                        socket.emit("access-denied",data);
+
+                        newRequestElement.remove();
+              
+                        if(document.getElementById('user-admit').children.length == 0){
+                          document.getElementById('user-lobby').hidden = true;
+                          h.collapse_admit(true);
+                        }
+              
+                    });
+
+                    userAcceptElement.addEventListener('click',()=>{
+            
                         socket.emit("access-granted",data);
+                        newRequestElement.remove();
+              
+                        if(document.getElementById('user-admit').children.length == 0){
+                          document.getElementById('user-lobby').hidden = true;
+                          h.collapse_admit(true);
+                        }
+              
                     });
-    
-                    document.getElementById("dont-admit"+socketid_admit).addEventListener('click',()=>{
-                        document.getElementById("admit-lobby-element"+socketid_admit).hidden = true;
-                        socket.emit("access-denied");
-                    });
+
+
+
+                    // #######################################################################
+
                 }
             });
+
+
+            //##########################################################################
+
+            document.getElementById('view-all').addEventListener('click',()=>{
+                h.collapse_admit(false);
+            });
+
+
+            document.getElementById('deny-all').addEventListener('click',()=>{
+                document.querySelectorAll('.user-admit-childs').forEach(element =>{
+                    let temp_data = element.id.split("@");
+                    socket.emit("access-denied",{
+                        room:temp_data[0],
+                        username:temp_data[1],
+                        socketId:temp_data[2]
+                    });
+                    element.remove();
+                });
+                document.getElementById('user-lobby').hidden = true;
+                h.collapse_admit(true);
+                
+            });
+      
+            document.getElementById('admit-all').addEventListener('click',()=>{
+              document.querySelectorAll('.user-admit-childs').forEach(element =>{
+                let temp_data = element.id.split("@");
+                socket.emit("access-granted",{
+                    room:temp_data[0],
+                    username:temp_data[1],
+                    socketId:temp_data[2]
+                });
+                element.remove();
+                });
+              document.getElementById('user-lobby').hidden = true;
+              h.collapse_admit(true);
+            });
+
+
+            //##########################################################################
 
             socket.on('access has been granted',(data)=>{
                 socket.emit('alert-other-users',data);

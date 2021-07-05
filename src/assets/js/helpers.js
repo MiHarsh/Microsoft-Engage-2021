@@ -21,6 +21,13 @@ export default {
         return meeting_code;
     },
 
+    // whether to collapse or expand admit request box.
+    collapse_admit(state){
+        document.getElementById('user-admit').hidden = state;
+        document.getElementById('view-all').hidden = !state;
+        document.getElementById('admit-all').hidden = state;
+    },
+
 
     // Once a user disconnects, remove his video, and
     // adjust the video sizes of other elements.

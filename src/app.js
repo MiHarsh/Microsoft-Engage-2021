@@ -91,8 +91,8 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
     });
 
     // if admin denies the permission
-    socket.on('access-denied',()=>{
-        console.log("Access denied by user");
+    socket.on('access-denied',(data)=>{
+        console.log("Access denied by user",data);
     });
 
     // send details of new user to previously present sockets
