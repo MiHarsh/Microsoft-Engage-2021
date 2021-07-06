@@ -56,33 +56,13 @@ window.addEventListener( 'load', () => {
     document.getElementById( 'create-room' ).addEventListener( 'click', ( e ) => {
         e.preventDefault();
 
-        let roomName = document.querySelector( '#room-name' ).value;
-        let yourName = document.querySelector( '#your-name' ).value;
+        //create room link
+        let roomLink = `${ location.origin }/join?room=${ helpers.generateRandomString() }`;
 
+        //show message with link to room
+        document.querySelector( '#room-created' ).innerHTML = `Room successfully created. Click <a href='${ roomLink }'>here</a> to enter room. 
+            Share the room link with your partners.`;
 
-
-        if ( roomName && yourName ) {
-            //remove error message, if any
-            document.querySelector( '#err-msg' ).innerHTML = "";
-
-            //save the user's name in sessionStorage
-            sessionStorage.setItem( 'username', yourName );
-
-            //create room link
-            let roomLink = `${ location.origin }/join?room=${ helpers.generateRandomString() }`;
-
-            //show message with link to room
-            document.querySelector( '#room-created' ).innerHTML = `Room successfully created. Click <a href='${ roomLink }'>here</a> to enter room. 
-                Share the room link with your partners.`;
-
-            //empty the values
-            document.querySelector( '#room-name' ).value = '';
-            document.querySelector( '#your-name' ).value = '';
-        }
-
-        else {
-            document.querySelector( '#err-msg' ).innerHTML = "All fields are required";
-        }
     } );
 
 
