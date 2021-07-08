@@ -53,7 +53,8 @@ const { connected } = require('process');
 const { join } = require('path');
 const { isDate } = require('util');
 
-
+// View engine setup
+app.engine('html', require('ejs').renderFile);
 app.use( favicon( path.join( __dirname, 'favicon.ico' ) ) );
 app.use( '/assets', express.static( path.join( __dirname, 'assets' ) ) );
 
@@ -228,10 +229,7 @@ app.get( '/user', ( req, res ) => {
     res.sendFile( __dirname + '/login.html' );
 });
 
-// tell user to login -->
-app.get('/login',(req,res)=>{
-    res.send('Login please');
-})
+
 
 
 // user
@@ -279,10 +277,77 @@ io.of('/user').on('connection',(socket)=>{
         io.of('/stream').to(data.room).emit('chat',{ sender: data.sendername, msg: data.message });
     });
 
+});
 
 
+app.get( '/authRoom', ( req, res ) => {
+    res.send("hi there");
+    console.log(req.query.room);
+});
+
+let bodyparser = require("body-parser");
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
 
 
-    // console.log()
+// tell user to login -->
+app.get('/login',(req,res)=>{
 
+    res.render( __dirname + '/form.html',{room:req.query.room} );
+})
+
+app.post('/signup', function(req,res){
+
+    var name = req.body.name;
+    var email =req.body.email.split("@")[0];
+    var pass = req.body.password;
+    let all_users = dbRef.child("users");
+    all_users.once('value',(e)=>{
+        if(e.val()[email]){
+            res.render( __dirname + '/form.html',{room:req.query.room} );
+        }
+        if(req.query.room){
+            
+            // store in database
+            dbRef.child("users").child(email).set({rooms:[req.query.room],
+                username:name, password:pass });
+        }
+        else{
+            dbRef.child("users").child(email).set({rooms:[],
+                username:name, password:pass });
+        }
+        return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email } );
+    });
+
+});
+
+app.post('/signin', function(req,res){
+
+    var email =req.body.email.split("@")[0];
+    var pass = req.body.password;
+
+    //check whether user is member or not 
+    let all_users = dbRef.child("users");
+    all_users.once('value',(e)=>{
+
+        if(e.val()[email]){
+            if(e.val()[email]["password"] === pass){
+
+                if(req.query.room){
+                    // store in database
+                    room_ref = dbRef.child("users").child(email).child('rooms');
+    
+                    room_ref.once('value',(rm)=>{
+                        let currentRoomsLength = Object.keys(rm.val()).length;
+                        room_ref.child(String(currentRoomsLength)).set(req.query.room);
+                    });
+                }
+                
+                // msIsLoggedIn = true;
+                return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email } );
+            }
+        }
+        res.render( __dirname + '/form.html' );
+    });
+    
 });
