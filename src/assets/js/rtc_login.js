@@ -37,7 +37,8 @@ window.addEventListener( 'load', () => {
             let base_room_container = document.getElementById("room-list-update");
             let base_container = document.querySelector("#page-chatrooms");
 
-            console.log(data.length);
+            // update number of rooms
+            document.getElementById("updateRoomLength").innerText = data.length;
 
             for(var i=1;i<=data.length;i++){
                 // add rooms in the dropdown menu

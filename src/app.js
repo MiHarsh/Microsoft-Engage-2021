@@ -288,7 +288,6 @@ app.use(bodyparser.json());
 
 // tell user to login -->
 app.get('/login',(req,res)=>{
-
     res.render( __dirname + '/form.html',{room:req.query.room} );
 })
 
@@ -312,7 +311,7 @@ app.post('/signup', function(req,res){
             dbRef.child("users").child(email).set({rooms:['self'],
                 username:name, password:pass });
         }
-        return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email, name : name} );
+        res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email, name : name} );
     });
 
 });
@@ -338,9 +337,8 @@ app.post('/signin', function(req,res){
                         room_ref.child(String(currentRoomsLength)).set(req.query.room);
                     });
                 }
-                
                 // msIsLoggedIn = true;
-                return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email,name : e.val()[email]["username"] } );
+                res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email,name : e.val()[email]["username"] } );
             }
         }
         res.sendFile( __dirname + '/form.html' );
