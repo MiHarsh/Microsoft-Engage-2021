@@ -11,7 +11,38 @@ var vote_counts = {} ;
 let express = require( 'express' );
 let app = express();
 let socketio = require( 'socket.io' );
-const port = process.env.PORT || 3000
+
+
+// database configs
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+var firebase = require("firebase/app");
+
+// Add the Firebase products that you want to use
+require("firebase/auth");
+require("firebase/firestore");
+require("firebase/database");
+
+var firebaseConfig = {
+    apiKey: "AIzaSyAy51aw4heZf4N9OnKvNa2C5TFrJ9w03Do",
+    authDomain: "engage-e4adf.firebaseapp.com",
+    databaseURL: "https://engage-e4adf-default-rtdb.firebaseio.com",
+    projectId: "engage-e4adf",
+    storageBucket: "engage-e4adf.appspot.com",
+    messagingSenderId: "64483244309",
+    appId: "1:64483244309:web:7c611555bc4b918c72111c",
+    measurementId: "G-63BZQQVVKM"
+  };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+dbRef = db.ref();
+
+// Ends here
+
+
+const port = process.env.PORT || 3000;
 
 const expressServer = app.listen(port);
 const io = socketio(expressServer);
@@ -85,9 +116,22 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
     // after access has been granted, join the room, and inform other users;
     socket.on('alert-other-users',(data)=>{
-
+        let room_details = '';
         // participants join the room
         socket.join( data.room );
+
+        // send messages to the rooms
+        dbRef.child("rooms").on('value',(e)=>{
+            room_details = e.val();
+
+            // send the previous chats to the room;
+            io.of('/stream').to(socket.id).emit('room-chat-details',{room:data.room,
+                chats:room_details[data.room]});
+            
+        });
+
+
+        
         socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
     });
 
@@ -131,6 +175,21 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
             socket.to( data.room ).emit( 'chat', { sender: data.sender, msg: data.msg } );
         }
 
+        // send message to sockets, which haven't joined the meet, but are on chats
+        let snd = {
+            room: data.room,
+            timestamp: Date.now(),
+            sendername : data.sender,
+            message : data.msg,
+            email: data.usermail
+        };
+
+        // store in database
+        dbRef.child("rooms").child(snd.room).child(snd.timestamp).set({sender:snd.sendername,
+            message:snd.message, email:snd.email });
+        
+        io.of('/user').to(data.room).emit('chat',snd);
+
         
     } );
 
@@ -162,10 +221,68 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         }
         
     });
-
-
-
-
 });
 
+// when user has logged in -->
+app.get( '/user', ( req, res ) => {
+    res.sendFile( __dirname + '/login.html' );
+});
 
+// tell user to login -->
+app.get('/login',(req,res)=>{
+    res.send('Login please');
+})
+
+
+// user
+
+io.of('/user').on('connection',(socket)=>{
+    console.log("new socket connected",socket.id);
+    let users = '';
+    let room_details = '';
+
+    socket.on('subscribe',(data)=>{
+
+        socket.join(socket.id);
+ 
+        let usermail = data.usermail;
+
+        // send room details to the client
+        dbRef.child("users").on('value',(e)=>{
+            users = e.val();
+            socket.emit('user-rooms',users[usermail].rooms);
+        });
+
+        // send messages to the rooms
+        dbRef.child("rooms").on('value',(e)=>{
+            room_details = e.val();
+            
+        });
+        
+    });
+
+    socket.on('get-room-chats',(roomName)=>{
+        console.log("I am Called");
+        socket.emit('room-chat-details',{room:roomName,
+                                        chats:room_details[roomName]});
+        socket.join(roomName);
+
+    });
+
+    socket.on('chat',(data)=>{
+
+        // store in database
+        dbRef.child("rooms").child(data.room).child(data.timestamp).set({sender:data.sendername,
+            message:data.message, email:data.email });
+
+        socket.to(data.room).emit('chat',data);
+        io.of('/stream').to(data.room).emit('chat',{ sender: data.sendername, msg: data.message });
+    });
+
+
+
+
+
+    // console.log()
+
+});

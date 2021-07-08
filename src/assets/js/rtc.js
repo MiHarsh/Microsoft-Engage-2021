@@ -7,6 +7,8 @@ window.addEventListener( 'load', () => {
     console.log("defined just now");
     const room = h.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
+    // const useremail = sessionStorage.getItem( 'email' );
+    const usermail = "harsh";
 
     if ( !room ) {
         document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
@@ -273,6 +275,11 @@ window.addEventListener( 'load', () => {
                 }
             } );
 
+            // load previous chat history
+            
+            socket.on('room-chat-details',(data)=>{
+                console.log(data);
+            })
 
             socket.on( 'chat', ( data ) => {
                 h.addChat( data, 'remote' );
@@ -296,7 +303,8 @@ window.addEventListener( 'load', () => {
             let data = {
                 room: room,
                 msg: msg,
-                sender: username
+                sender: username,
+                usermail : usermail
             };
 
             //emit chat message
