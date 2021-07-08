@@ -5,10 +5,11 @@ import h from './helpers.js';
 window.addEventListener( 'load', () => {
 
     console.log("entered ");
-    // const usermail = sessionStorage.getItem( 'userid' );
-    // const username = sessionStorage.getItem( 'username' );
-    const username = "Harsh";
-    const usermail = "a";
+
+    const username = document.getElementsByClassName("user-name")[0].innerText;
+    const usermail = document.getElementById("user-email").innerText.split(" ")[1];
+    
+    console.log(usermail);
     // const usermail = sessionStorage.getItem( 'userid' );
 
     if ( !usermail ) {
@@ -20,7 +21,6 @@ window.addEventListener( 'load', () => {
 
         var socketId = '';
         var myStream = '';
-
 
         socket.on( 'connect', () => {
             //set socketId
@@ -57,6 +57,7 @@ window.addEventListener( 'load', () => {
                             <i class="fa my-2 mx-1 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${data[i-1]}"></i>
                         </div>
                     </div>
+                    <a href="/join?room=${data[i-1]}"> Join meet</a>
                 </div>`;
 
             }
@@ -122,8 +123,13 @@ window.addEventListener( 'load', () => {
         // load data only when user wants to enter the specific room
         
         socket.on("room-chat-details",(data)=>{
-            for(var i=0;i<Object.keys(data.chats).length;i++){
-                document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${data.chats[Object.keys(data.chats)[i]]} </div>`;
+            if(data.chats){
+                let data_length = Object.keys(data.chats).length;
+                if(data_length){
+                    for(var i=0;i<data_length;i++){
+                        document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${data.chats[Object.keys(data.chats)[i]]} </div>`;
+                    }
+                }
             }
         });
 
@@ -138,6 +144,9 @@ window.addEventListener( 'load', () => {
 
             // send message to server;
             socket.emit("chat",snd);
+            // also save your own chats
+            document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${snd.message} </div>`;
+
         };
         
         socket.on('chat',(data)=>{

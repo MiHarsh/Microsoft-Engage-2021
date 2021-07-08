@@ -244,10 +244,12 @@ io.of('/user').on('connection',(socket)=>{
         socket.join(socket.id);
  
         let usermail = data.usermail;
+        console.log(data);
 
         // send room details to the client
-        dbRef.child("users").on('value',(e)=>{
+        dbRef.child("users").once('value',(e)=>{
             users = e.val();
+            console.log("revi",users);
             socket.emit('user-rooms',users[usermail].rooms);
         });
 
@@ -260,7 +262,6 @@ io.of('/user').on('connection',(socket)=>{
     });
 
     socket.on('get-room-chats',(roomName)=>{
-        console.log("I am Called");
         socket.emit('room-chat-details',{room:roomName,
                                         chats:room_details[roomName]});
         socket.join(roomName);
@@ -268,7 +269,7 @@ io.of('/user').on('connection',(socket)=>{
     });
 
     socket.on('chat',(data)=>{
-
+        console.log(data);
         // store in database
         dbRef.child("rooms").child(data.room).child(data.timestamp).set({sender:data.sendername,
             message:data.message, email:data.email });
@@ -279,11 +280,6 @@ io.of('/user').on('connection',(socket)=>{
 
 });
 
-
-app.get( '/authRoom', ( req, res ) => {
-    res.send("hi there");
-    console.log(req.query.room);
-});
 
 let bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({ extended: false }));
@@ -313,10 +309,10 @@ app.post('/signup', function(req,res){
                 username:name, password:pass });
         }
         else{
-            dbRef.child("users").child(email).set({rooms:[],
+            dbRef.child("users").child(email).set({rooms:['self'],
                 username:name, password:pass });
         }
-        return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email } );
+        return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email, name : name} );
     });
 
 });
@@ -329,7 +325,7 @@ app.post('/signin', function(req,res){
     //check whether user is member or not 
     let all_users = dbRef.child("users");
     all_users.once('value',(e)=>{
-
+        
         if(e.val()[email]){
             if(e.val()[email]["password"] === pass){
 
@@ -344,10 +340,10 @@ app.post('/signin', function(req,res){
                 }
                 
                 // msIsLoggedIn = true;
-                return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email } );
+                return res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email,name : e.val()[email]["username"] } );
             }
         }
-        res.render( __dirname + '/form.html' );
+        res.sendFile( __dirname + '/form.html' );
     });
     
 });

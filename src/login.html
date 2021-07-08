@@ -32,7 +32,7 @@
             <div class="sidebar-content">
                 <!-- sidebar-brand  -->
                 <div class="sidebar-item sidebar-brand">
-                    <a href="#">pro sidebar</a>
+                    <a href="#">Welcome User</a>
                 </div>
                 <!-- sidebar-header  -->
                 <div class="sidebar-item sidebar-header d-flex flex-nowrap">
@@ -40,10 +40,11 @@
                         <img class="img-responsive img-rounded" src="./assets/img/user.jpg" alt="User picture">
                     </div>
                     <div class="user-info">
-                        <span class="user-name">Jhon
-                            <strong>Smith</strong>
+                        <span class="user-name">
+                            <strong> <%=name%> </strong>
                         </span>
-                        <span class="user-role">Administrator</span>
+                        <span id="user-email" hidden> <%=email%> </span>
+                        <span class="user-role">Member</span>
                         <span class="user-status">
                             <i class="fa fa-circle"></i>
                             <span>Online</span>
