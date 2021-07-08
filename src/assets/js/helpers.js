@@ -187,30 +187,51 @@ export default {
 
 
 
-    addChat( data, senderType ) {
+    addChat( data, senderType, fromDatabase ) {
+        let chatMsgDiv;
+        let time;
+        if(data.room){
+            // chat is from user homepage
+            chatMsgDiv = document.querySelector( '#chat-messages-'+ data.room );
+        }
+        else{
+            chatMsgDiv = document.querySelector( '#chat-messages' );
+        }
+        time = moment().format( 'Do MMMM, YYYY h:mm a' );
 
 
-        let chatMsgDiv = document.querySelector( '#chat-messages' );
+        if(data.timestamp){
+            time = moment(data.timestamp).format( 'Do MMMM, YYYY h:mm a' );
+        }
+
+        
         let contentAlign = 'justify-content-end';
         let senderName = 'You';
         let msgBg = 'bg-light';
 
         if ( senderType === 'remote' ) {
 
-            // notify when new message arrives
-            let audio = new Audio('../assets/tones/message.mp3');
-            audio.play();
-
             contentAlign = 'justify-content-start';
             senderName = data.sender;
             msgBg = '';
 
-            this.toggleChatNotificationBadge();
+            // notify when new message arrives
+
+            if(!fromDatabase){
+                // silent data loading when retrieving from database
+                let audio = new Audio('../assets/tones/message.mp3');
+                audio.play();
+    
+                this.toggleChatNotificationBadge();
+            }
+
+
         }
 
         let infoDiv = document.createElement( 'div' );
         infoDiv.className = 'sender-info';
-        infoDiv.innerHTML = `${ senderName } - ${ moment().format( 'Do MMMM, YYYY h:mm a' ) }`;
+
+        infoDiv.innerHTML = `${ senderName } - ${time}`;
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg text-info ${ msgBg }`;
@@ -222,8 +243,9 @@ export default {
 
         colDiv.appendChild( infoDiv );
         rowDiv.appendChild( colDiv );
-
         chatMsgDiv.appendChild( rowDiv );
+
+        // document.querySelector( '#chat-messages' ).appendChild( rowDiv );
 
         /**
          * Move focus to the newly added message but only if:

@@ -84,13 +84,12 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         if(!socket.adapter.rooms[data.room]){
             //subscribe/join a room
             socket.join( data.room );
-        
             adminOfRoom[data.room] = data.socketId;
 
             // if only single user is present, he'll be admin --->
             socket.emit('iAmAdmin');
 
-            console.log(socket.adapter.rooms);
+
         }
         else{
             //Inform admin in the room of new user's arrival
@@ -120,25 +119,23 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         let room_details = '';
         // participants join the room
         socket.join( data.room );
-
-        // send messages to the rooms
-        dbRef.child("rooms").on('value',(e)=>{
-            room_details = e.val();
-
-            // send the previous chats to the room;
-            io.of('/stream').to(socket.id).emit('room-chat-details',{room:data.room,
-                chats:room_details[data.room]});
-            
-        });
-
-
-        
         socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
     });
 
     // if admin denies the permission
     socket.on('access-denied',(data)=>{
         console.log("Access denied by user",data);
+    });
+
+    // send chat details when requested.
+    socket.on('get-prev-chat',(room)=>{
+        // send chats
+        dbRef.child("rooms").once('value',(e)=>{
+            room_details = e.val();
+            // send the previous chats to the room;
+            io.of('/stream').to(socket.id).emit('room-chat-details',{
+                chats:room_details[room]});
+        });
     });
 
     // send details of new user to previously present sockets

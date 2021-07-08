@@ -8,6 +8,10 @@ window.addEventListener( 'load', () => {
 
     const username = document.getElementsByClassName("user-name")[0].innerText;
     const usermail = document.getElementById("user-email").innerText.split(" ")[1];
+
+    localStorage.setItem( 'username', username );
+    localStorage.setItem( 'email', usermail );
+
     
     console.log(usermail);
     // const usermail = sessionStorage.getItem( 'userid' );
@@ -46,8 +50,10 @@ window.addEventListener( 'load', () => {
 
                 // add corresponding chat sections to each room
 
-                base_container.innerHTML += ` <div id ="${data[i-1]}" hidden>
-                    <div class="col-md-3  px-1 d-print-none mb-2 bg-white"style="border-radius:1%;margin-top:16px;" id='chat-pane'>
+                base_container.innerHTML += ` 
+                <div id ="${data[i-1]}" hidden>
+                    <a class="btn btn-md btn-info mr-5 float-right rounded-0 " href="/join?room=${data[i-1]}"> Join meet</a>
+                    <div class="col-md-3  px-1 d-print-none mb-2 bg-info"style="border-radius:1%;margin-top:16px;" id='chat-pane'>
                     
                         <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
 
@@ -58,7 +64,7 @@ window.addEventListener( 'load', () => {
                             <i class="fa my-2 mx-1 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${data[i-1]}"></i>
                         </div>
                     </div>
-                    <a href="/join?room=${data[i-1]}"> Join meet</a>
+                    
                 </div>`;
 
             }
@@ -127,8 +133,20 @@ window.addEventListener( 'load', () => {
             if(data.chats){
                 let data_length = Object.keys(data.chats).length;
                 if(data_length){
+                    let ts = Object.keys(data.chats);
                     for(var i=0;i<data_length;i++){
-                        document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${data.chats[Object.keys(data.chats)[i]]} </div>`;
+
+                        if(data.chats[ts[i]].email === usermail){
+                            // align it to the right
+                            h.addChat({sender:data.chats[ts[i]].sender,
+                                msg:data.chats[ts[i]].message,
+                               timestamp:Number(ts[i]), room:data.room },'local', true);
+                        }
+                        else{
+                            h.addChat({sender:data.chats[ts[i]].sender,
+                                msg:data.chats[ts[i]].message,
+                               timestamp:Number(ts[i]), room:data.room },'remote', true);
+                        }
                     }
                 }
             }
@@ -146,13 +164,13 @@ window.addEventListener( 'load', () => {
             // send message to server;
             socket.emit("chat",snd);
             // also save your own chats
-            document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${snd.message} </div>`;
+            // document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${snd.message} </div>`;
+            h.addChat({sender:username, msg:data.mssg, timestamp:snd.timestamp, room:data.room },'local', false);
 
         };
         
         socket.on('chat',(data)=>{
-            console.log(data);
-            document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${data.message} </div>`;
+            h.addChat({sender:data.sendername, msg:data.message, timestamp:snd.timestamp, room:data.room },'remote', false);
         });
         
 

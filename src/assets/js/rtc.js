@@ -7,8 +7,11 @@ window.addEventListener( 'load', () => {
     console.log("defined just now");
     const room = h.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
-    // const useremail = sessionStorage.getItem( 'email' );
-    const usermail = "harsh";
+    let usermail = sessionStorage.getItem( 'email' );
+
+    if(!usermail){
+        usermail = "unknown";
+    }
 
     if ( !room ) {
         document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
@@ -275,14 +278,32 @@ window.addEventListener( 'load', () => {
                 }
             } );
 
+            // add a click listener, to load chats, only when user asks
+            document.querySelector( '#toggle-chat-pane' ).addEventListener( 'click', ( e ) => {
+                if(document.getElementById("chat-messages").innerHTML === ""){
+                    socket.emit("get-prev-chat",room);
+                }
+            });
+
             // load previous chat history
-            
             socket.on('room-chat-details',(data)=>{
-                console.log(data);
-            })
+                if(data.chats){
+                    let data_length = Object.keys(data.chats).length;
+                    if(data_length){
+                        let ts = Object.keys(data.chats);
+                        for(var i=0;i<data_length;i++){
+
+                            h.addChat({sender:data.chats[ts[i]].sender,
+                                msg:data.chats[ts[i]].message,
+                            timestamp:Number(ts[i]) },'remote', true);
+
+                        }
+                    }
+                }
+            });
 
             socket.on( 'chat', ( data ) => {
-                h.addChat( data, 'remote' );
+                h.addChat( data, 'remote',false );
             } );
         } );
 
@@ -311,7 +332,7 @@ window.addEventListener( 'load', () => {
             socket.emit( 'chat', data );
 
             //add localchat
-            h.addChat( data, 'local' );
+            h.addChat({sender:username,msg:msg, timestamp:Date.now() },'local', false);
         }
 
 
