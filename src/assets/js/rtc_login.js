@@ -89,43 +89,12 @@ window.addEventListener( 'load', () => {
 
 
                 //Chat Section #####################################################################
-                // add new chats to the database
-
-                document.getElementById( 'chat-input-'+ element.id ).addEventListener( 'keypress', ( e ) => {
-                    console.log(e);
-                    if ( e.which === 13 && ( e.target.value.trim() ) ) {
-                        e.preventDefault();
-
-                        sendMsg({room: element.id,
-                            mssg: e.target.value } );
-
-                        setTimeout( () => {
-                            e.target.value = '';
-                        }, 50 );
-                    }
-                } );
-
-                document.getElementById( 'chat-icon-send-'+element.id ).addEventListener( 'click', ( e ) => {
-                    let text_elem = document.getElementById( 'chat-input-'+element.id );
-                    if( text_elem.value !== '' ){
-                        e.preventDefault();
-
-                        sendMsg({room: element.id,
-                                mssg: text_elem.value } );
-
-                        setTimeout( () => {
-                            text_elem.value = '';
-                        }, 50 );
-                    }
-                } );
-
+                // add listener, to append new messages to database
+                addNewChatsToDatabase(element.id);
 
             });
                 
         });
-
-
-
 
         // get room-chats -->
         // load data only when user wants to enter the specific room
@@ -167,11 +136,99 @@ window.addEventListener( 'load', () => {
             // also save your own chats
             h.addChat({sender:username, msg:data.mssg, timestamp:snd.timestamp, room:data.room },'local', false);
 
-        };
+        }
+
+        // a function, which takes ID and adds event listeners -> add chats to database.
+        function addNewChatsToDatabase(elementId){
+
+            document.getElementById( 'chat-input-'+ elementId ).addEventListener( 'keypress', ( e ) => {
+                console.log(e);
+                if ( e.which === 13 && ( e.target.value.trim() ) ) {
+                    e.preventDefault();
+
+                    sendMsg({room: elementId,
+                        mssg: e.target.value } );
+
+                    setTimeout( () => {
+                        e.target.value = '';
+                    }, 50 );
+                }
+            } );
+
+            document.getElementById( 'chat-icon-send-'+ elementId ).addEventListener( 'click', ( e ) => {
+                let text_elem = document.getElementById( 'chat-input-'+ elementId );
+                if( text_elem.value !== '' ){
+                    e.preventDefault();
+
+                    sendMsg({room: elementId,
+                            mssg: text_elem.value } );
+
+                    setTimeout( () => {
+                        text_elem.value = '';
+                    }, 50 );
+                }
+            } );
+        }
+
         
         socket.on('chat',(data)=>{
             h.addChat({sender:data.sendername, msg:data.message, timestamp:data.timestamp, room:data.room },'remote', false);
         });
+
+
+        document.getElementById('getACode').addEventListener('click',()=>{
+            let randomRoomCode = h.generateRandomString();
+            document.getElementById('showACode').innerText = randomRoomCode;
+
+            socket.emit('addNewRoomCode',{mail:usermail, roomName: randomRoomCode});
+            //now add the new Room
+
+            let base_room_container = document.getElementById("room-list-update");
+            let base_container = document.querySelector("#page-chatrooms");
+
+            // update number of rooms
+            let currentRoomsLength = document.getElementById("updateRoomLength").innerText;
+            document.getElementById("updateRoomLength").innerText = Number(currentRoomsLength) + 1 ;
+
+            
+            // add rooms in the dropdown menu
+            base_room_container.innerHTML += `<li id="room-list-${randomRoomCode}"><a href="#${randomRoomCode}">Room ${Number(currentRoomsLength) +1}</a></li>`;
+
+            // add corresponding chat sections to each room
+            base_container.innerHTML += ` 
+            <div id ="${randomRoomCode}" hidden>
+                <a class="btn btn-md btn-info mr-5 float-right rounded-0 " href="/join?room=${randomRoomCode}"> Join meet</a>
+                <div class="col-md-3  px-1 d-print-none mb-2 bg-info"style="border-radius:1%;margin-top:16px;" id='chat-pane'>
+                
+                    <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
+
+                    <div id='chat-messages-${randomRoomCode}'></div>
+
+                    <div class="mr-auto ml-auto mb-2 input-group" >
+                        <input type="text" id='chat-input-${randomRoomCode}' class="form-control rounded-2 border-info" name="lname"placeholder="Type here...">
+                        <i class="fa my-2 mx-1 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${randomRoomCode}"></i>
+                    </div>
+                </div>
+            </div>`;
+
+
+            // add listener for newly added room
+            addNewChatsToDatabase(randomRoomCode);
+
+            //register this newly created room for user
+            socket.emit('registerNewRoom',{email:usermail, room:randomRoomCode});
+
+            document.getElementById("room-list-" + randomRoomCode).addEventListener('click',(e2)=>{
+
+                Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((ele)=>{
+                    ele.hidden = true;
+                });
+                document.getElementById(randomRoomCode).hidden = false;
+
+            });
+
+        });
+
              
     }
 } );

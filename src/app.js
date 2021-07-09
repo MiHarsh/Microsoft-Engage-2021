@@ -356,6 +356,16 @@ io.of('/user').on('connection',(socket)=>{
 
     });
 
+    // store newly created room, which was created while scheduling a meet 
+    socket.on('registerNewRoom',(data)=>{
+        let room_ref = dbRef.child("users").child(data.email).child('rooms');
+    
+        room_ref.once('value',(rm)=>{
+            let currentRoomsLength = Object.keys(rm.val()).length;
+            room_ref.child(String(currentRoomsLength)).set(data.room);
+        });
+    });
+
     socket.on('chat',(data)=>{
         // store in database
         dbRef.child("rooms").child(data.room).child(data.timestamp).set({sender:data.sendername,
