@@ -53,10 +53,15 @@ const { connected } = require('process');
 const { join } = require('path');
 const { isDate } = require('util');
 
+
 // View engine setup
 app.engine('html', require('ejs').renderFile);
 app.use( favicon( path.join( __dirname, 'favicon.ico' ) ) );
 app.use( '/assets', express.static( path.join( __dirname, 'assets' ) ) );
+app.use( '/src', express.static( path.join( __dirname, 'src' ) ) );
+
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 
 // whenever get request is recieved on Server on join endpoint, render index.html file
@@ -221,10 +226,7 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
     });
 });
 
-// when user has logged in -->
-app.get( '/user', ( req, res ) => {
-    res.sendFile( __dirname + '/login.html' );
-});
+
 
 
 
@@ -241,17 +243,15 @@ io.of('/user').on('connection',(socket)=>{
         socket.join(socket.id);
  
         let usermail = data.usermail;
-        console.log(data);
 
         // send room details to the client
         dbRef.child("users").once('value',(e)=>{
             users = e.val();
-            console.log("revi",users);
             socket.emit('user-rooms',users[usermail].rooms);
         });
 
         // send messages to the rooms
-        dbRef.child("rooms").on('value',(e)=>{
+        dbRef.child("rooms").once('value',(e)=>{
             room_details = e.val();
             
         });
@@ -266,7 +266,6 @@ io.of('/user').on('connection',(socket)=>{
     });
 
     socket.on('chat',(data)=>{
-        console.log(data);
         // store in database
         dbRef.child("rooms").child(data.room).child(data.timestamp).set({sender:data.sendername,
             message:data.message, email:data.email });
@@ -288,6 +287,12 @@ app.get('/login',(req,res)=>{
     res.render( __dirname + '/form.html',{room:req.query.room} );
 })
 
+// send user to dashboard -->
+app.get('/dashboard',(req,res)=>{
+    res.sendFile( __dirname + '/dashboard.html');
+});
+
+
 app.post('/signup', function(req,res){
 
     var name = req.body.name;
@@ -308,7 +313,9 @@ app.post('/signup', function(req,res){
             dbRef.child("users").child(email).set({rooms:['self'],
                 username:name, password:pass });
         }
-        res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email, name : name} );
+        res.cookie('name', e.val()[email]["username"]);
+        res.cookie('email',email);
+        res.redirect('/dashboard');
     });
 
 });
@@ -334,8 +341,9 @@ app.post('/signin', function(req,res){
                         room_ref.child(String(currentRoomsLength)).set(req.query.room);
                     });
                 }
-                // msIsLoggedIn = true;
-                res.render( __dirname + '/login.html', {msIsLoggedIn : true, email:email,name : e.val()[email]["username"] } );
+                res.cookie('name', e.val()[email]["username"]);
+                res.cookie('email',email);
+                res.redirect('/dashboard');
             }
         }
         res.sendFile( __dirname + '/form.html' );

@@ -2,19 +2,21 @@ let isAdmin = false;
 let startTime = "";
 import h from './helpers.js';
 
+
+
 window.addEventListener( 'load', () => {
 
     console.log("entered ");
+    const username = $.cookie('name') ;  
+    const usermail = $.cookie('email'); 
 
-    const username = document.getElementsByClassName("user-name")[0].innerText;
-    const usermail = document.getElementById("user-email").innerText.split(" ")[1];
+    document.getElementsByClassName("user-name")[0].innerText = username;
+    document.getElementById("user-email").innerText = usermail ;
 
     localStorage.setItem( 'username', username );
     localStorage.setItem( 'email', usermail );
 
     
-    console.log(usermail);
-    // const usermail = sessionStorage.getItem( 'userid' );
 
     if ( !usermail ) {
         window.location.replace(`${location.href.split('/')[0]}` + '/login' );
@@ -71,7 +73,8 @@ window.addEventListener( 'load', () => {
 
             Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((element)=>{
 
-                document.getElementById("room-list-" + element.id).addEventListener('click',()=>{
+
+                document.getElementById("room-list-" + element.id).addEventListener('click',(e2)=>{
 
                     Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((ele)=>{
                         ele.hidden = true;
@@ -79,45 +82,43 @@ window.addEventListener( 'load', () => {
                     element.hidden = false;
 
                     // load chats only if chats are not loaded
-                    if(document.getElementById("chat-messages-"+element.id).innerHTML === ""){
+                    if(document.getElementById("chat-messages-"+element.id).children.length === 0){
                         socket.emit("get-room-chats",element.id);
-                    }
-
-
-                    //Chat Section #####################################################################
-                    // add new chats to the database
-
-                    document.getElementById( 'chat-input-'+ element.id ).addEventListener( 'keypress', ( e ) => {
-                        if ( e.which === 13 && ( e.target.value.trim() ) ) {
-                            e.preventDefault();
-
-                            sendMsg({room: element.id,
-                                mssg: e.target.value } );
-
-                            setTimeout( () => {
-                                e.target.value = '';
-                            }, 50 );
-                        }
-                    } );
-
-                    document.getElementById( 'chat-icon-send-'+element.id ).addEventListener( 'click', ( e ) => {
-                        let text_elem = document.getElementById( 'chat-input-'+element.id );
-                        if( text_elem.value !== '' ){
-                            e.preventDefault();
-
-                            sendMsg({room: element.id,
-                                    mssg: text_elem.value } );
-
-                            setTimeout( () => {
-                                text_elem.value = '';
-                            }, 50 );
-                        }
-                    } );
-
-
-
-
+                }
                 });
+
+
+                //Chat Section #####################################################################
+                // add new chats to the database
+
+                document.getElementById( 'chat-input-'+ element.id ).addEventListener( 'keypress', ( e ) => {
+                    console.log(e);
+                    if ( e.which === 13 && ( e.target.value.trim() ) ) {
+                        e.preventDefault();
+
+                        sendMsg({room: element.id,
+                            mssg: e.target.value } );
+
+                        setTimeout( () => {
+                            e.target.value = '';
+                        }, 50 );
+                    }
+                } );
+
+                document.getElementById( 'chat-icon-send-'+element.id ).addEventListener( 'click', ( e ) => {
+                    let text_elem = document.getElementById( 'chat-input-'+element.id );
+                    if( text_elem.value !== '' ){
+                        e.preventDefault();
+
+                        sendMsg({room: element.id,
+                                mssg: text_elem.value } );
+
+                        setTimeout( () => {
+                            text_elem.value = '';
+                        }, 50 );
+                    }
+                } );
+
 
             });
                 
@@ -164,7 +165,6 @@ window.addEventListener( 'load', () => {
             // send message to server;
             socket.emit("chat",snd);
             // also save your own chats
-            // document.getElementById("chat-messages-"+ data.room).innerHTML += `<div> ${snd.message} </div>`;
             h.addChat({sender:username, msg:data.mssg, timestamp:snd.timestamp, room:data.room },'local', false);
 
         };
@@ -172,35 +172,6 @@ window.addEventListener( 'load', () => {
         socket.on('chat',(data)=>{
             h.addChat({sender:data.sendername, msg:data.message, timestamp:snd.timestamp, room:data.room },'remote', false);
         });
-        
-
-
-
-
-
-
-
-        // socket.on( 'chat', ( data ) => {
-        //     h.addChat( data, 'remote' );
-        // } );
-
-
-    
-
-        // function sendMsg( msg ) {
-        //     let data = {
-        //         room: room,
-        //         msg: msg,
-        //         sender: username
-        //     };
-
-        //     //emit chat message
-        //     socket.emit( 'chat', data );
-
-        //     //add localchat
-        //     h.addChat( data, 'local' );
-        // }
-
-        
+             
     }
 } );

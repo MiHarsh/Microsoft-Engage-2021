@@ -126,6 +126,23 @@ jQuery(function ($) {
     
   });
 
+  // open Schedule Meeting
+  $('#schdeule-meet-icon').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#schedule-meet").show();
+    
+  });
+
+  // open Join Meeting
+  $('#join-meet-icon').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#join-meet").show();
+    
+  });
+  
+
     
 });
 
