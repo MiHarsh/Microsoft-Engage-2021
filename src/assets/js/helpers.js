@@ -215,7 +215,7 @@ export default {
             senderName = data.sender;
             msgBg = '';
 
-            // notify when new message arrives
+            // notify when new message arrives, only in meet
             if(!fromDatabase && !data.room ){
                 // silent data loading when retrieving from database
                 let audio = new Audio('../assets/tones/message.mp3');
@@ -255,7 +255,7 @@ export default {
         }
     },
 
-
+    // when new message arrives
     toggleChatNotificationBadge() {
         if ( document.querySelector( '#chat-pane' ).classList.contains( 'chat-opened' ) ) {
             document.querySelector( '#new-chat-notification' ).setAttribute( 'hidden', true );
@@ -277,7 +277,6 @@ export default {
         if(sender){
             sender.replaceTrack( stream );
         }
-        // sender ? sender.replaceTrack( stream ) : '';
     },
 
     // this adds effects to when we share the screen, for now
@@ -300,18 +299,12 @@ export default {
     },
 
 
-    // when screen share is on, this button disables the video on mode
-    // but i should discourage this thing. I should have something like where i could share the screen
-    // discuss this.
-
     toggleVideoBtnDisabled( disabled ) {
         document.getElementById( 'toggle-video' ).disabled = disabled;
     },
 
 
-    // for doing full screen, use this one, change it to pin Option,
-    // current implementation looks very bad.
-
+    // to pinn to screen
     maximiseStream( e ) {
         let elem = e.target.parentElement.previousElementSibling;
         elem.requestFullscreen() || elem.mozRequestFullScreen() || elem.webkitRequestFullscreen() || elem.msRequestFullscreen();
@@ -332,10 +325,9 @@ export default {
         }
     },
 
-
+    // save the recordings
     saveRecordedStream( stream, user ) {
         let blob = new Blob( stream, { type: 'video/webm' } );
-
         let file = new File( [blob], `${ user }-${ moment().unix() }-record.webm` );
 
         saveAs( file );
@@ -365,7 +357,7 @@ export default {
     },
 
 
-    // this would adjust the size of the video, this should be replaced with a good code
+    // this would adjust the size of the video
     adjustVideoElemSize() {
         let elem = document.getElementsByClassName( 'card' );
         let totalRemoteVideosDesktop = elem.length;
@@ -393,9 +385,5 @@ export default {
     askForPoll(){
         document.querySelector(".wrapper").hidden = false;
     },
-
-    // pollListeners(){
-
-    // }
 
 };

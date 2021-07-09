@@ -142,6 +142,14 @@ jQuery(function ($) {
     
   });
   
+  
+  // open Page Calender
+  $('#show-calender').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#page-calendar").show();
+    
+  });
 
     
 });

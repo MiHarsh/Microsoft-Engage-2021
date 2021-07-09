@@ -103,7 +103,7 @@ app.post('/signup', function(req,res){
         }
         res.cookie('name', name);
         res.cookie('email',email);
-        res.redirect('/dashboard');
+        return res.redirect('/dashboard');
     });
 
 });
@@ -133,7 +133,7 @@ app.post('/signin', function(req,res){
                 }
                 res.cookie('name', e.val()[email]["username"]);
                 res.cookie('email',email);
-                res.redirect('/dashboard');
+                return res.redirect('/dashboard');
             }
         }
         res.sendFile( __dirname + '/form.html' );

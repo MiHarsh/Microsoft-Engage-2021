@@ -643,3 +643,118 @@ body {
   margin-right: auto;
   width: 25%;
 }
+
+/* CSS for calender */
+
+body {
+  background: #dfebed;
+}
+.container_calender {
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  margin: 40px auto;
+  max-width: 600px;
+}
+#calendar {
+  background: #2b4450;
+  border-radius: 6px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+.current-date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(73, 114, 133, 0.6);
+  padding: 30px 40px;
+}
+.current-month {
+  color: #dfebed;
+  font-size: 1.4rem;
+  font-weight: 300;
+}
+.week-days {
+  display: flex;
+  justify-content: space-between;
+  color: #dfebed;
+  font-weight: 600;
+  padding: 20px 40px;
+}
+.week-day {
+  padding: 10px;
+  text-align: center;
+  width: 43px;
+}
+.days {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.weeks {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  padding: 0 40px;
+}
+.week {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+.not-current-month {
+  opacity: 0.3;
+}
+.day {
+  padding: 10px;
+  text-align: center;
+  width: 42px;
+}
+.day.today {
+  background: #f78536;
+  border-radius: 50%;
+  font-weight: bold;
+}
+.day:not(.not-current-month):hover {
+  box-shadow: inset 2px 2px 4px 1px rgba(0, 0, 0, 0.25);
+  transform: scale(0.95);
+}
+#prev, #next {
+  position: absolute;
+  background: transparent;
+  border: none;
+  color: #dfebed;
+  cursor: pointer;
+  font-family: "Roboto Condensed", sans-serif;
+  font-size: 1.4rem;
+  outline: none;
+  padding: 30px;
+  transition: all 0.2s ease;
+}
+#prev:hover, #next:hover {
+  color: #f78536;
+}
+#prev:before {
+  content: '<';
+  padding-right: 4px;
+}
+#next {
+  right: 0;
+}
+#next:after {
+  content: '>';
+  padding-left: 4px;
+}
+#week-starter {
+  position: fixed;
+  top: 0;
+  right: 0;
+  color: #2b4450;
+  padding: 20px;
+  text-shadow: 2px 2px 1px #dfebed;
+}
+.week-starter__choice {
+  cursor: pointer;
+}
+.week-starter__choice > input {
+  cursor: pointer;
+}

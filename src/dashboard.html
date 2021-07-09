@@ -29,6 +29,7 @@
     <script src='assets/js/autolink.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src='./assets/js/jquery-cookie.js'></script>
+    <script src="./assets/js/calender.js"></script>
     
 </head>
 
@@ -137,7 +138,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a href="#" id="show-calender" >
                                 <i class="fa fa-calendar"></i>
                                 <span class="menu-text">Calendar</span>
                             </a>
@@ -159,7 +160,7 @@
                 </div>
 
                 <div>
-                    <a href="#">
+                    <a href="/login">
                         <i class="fa fa-power-off"></i>&nbsp;Logout
                     </a>
                 </div>
@@ -174,8 +175,21 @@
         <main class="page-content pt-2">
 
             <div id = "page-dashboard">
-                this is Dashboard
+                <!-- this is Dashboard
+                <img alt="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                title="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4E1CH?ver=dd82&amp;q=90&amp;m=2&amp;h=768&amp;w=1024&amp;b=%23FFFFFFFF&amp;aim=true">
+                
+                 -->
+            
             </div>
+
+            <div id = "page-calendar" class="container_calender" style="display: none;" >
+                    <div id="prev">Prev</div>
+                    <div id="next">Next</div>
+                    <article id="calendar"></article>
+            </div>
+                    
 
             <div id = "page-chatrooms">
 
@@ -204,7 +218,7 @@
 
 
             <!-- page-settings  -->
-            <div id="page-settings">
+            <div id="page-settings" style="display: none;" >
                 <div id="overlay" class="overlay"></div>
                 <div class="container-fluid p-5">
                     <div class="row">
@@ -281,6 +295,7 @@
 
 
     <script src="./assets/js/main.js"></script>
+    
 </body>
 
 </html>
