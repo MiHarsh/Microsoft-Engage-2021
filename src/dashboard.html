@@ -175,12 +175,21 @@
         <main class="page-content pt-2">
 
             <div id = "page-dashboard">
-                <!-- this is Dashboard
-                <img alt="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
-                title="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
-                src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4E1CH?ver=dd82&amp;q=90&amp;m=2&amp;h=768&amp;w=1024&amp;b=%23FFFFFFFF&amp;aim=true">
+
+                <div class="row">
+
+                    <div class="col-5">
+                        Microsoft Teams
+                        More ways to be a team.
+                    </div>
+
+                    <div class="col-7">
+                        <img alt="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                        title="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                        src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4E1CH?ver=dd82&amp;q=90&amp;m=2&amp;h=768&amp;w=1024&amp;b=%23FFFFFFFF&amp;aim=true">
+                    </div>
+                </div>
                 
-                 -->
             
             </div>
 
@@ -198,29 +207,46 @@
             <div id = "schedule-meet" style="display: none;">
                 <!-- https://imgur.com/lG923r9 -->
                 <!-- https://imgur.com/rHH58PR -->
-                <img  class="img-center ro" src="https://imgur.com/lG923r9.jpg" width="220px" height="250px"/>
+                <!-- width="220px" height="250px" -->
+
+                <img  class="img-center ro" src="https://imgur.com/cMwMBnP.jpg" />
+
+
+                <div class="mx-auto text-center">
+                    <button type="submit" class="my-2 mx-1  btn btn-outline-secondary btn-sm">Schedule a Meeting</button>
+                </div>
+
                 <div class="card card-center text-center" style="width: 18rem;">
                     <div class="card-body">
-                    Schedule a Meeting
+                    <h5>Schedule a Meeting</h5>
                     </div>
                 </div>
+
+
             </div>
             <div id = "join-meet" style="display: none;">
                 <!-- https://imgur.com/lG923r9 -->
                 <!-- https://imgur.com/rHH58PR -->
-                <img  class="img-center ro" src="https://imgur.com/rHH58PR.jpg" width="220px" height="250px"/>
-                <div class="card card-center text-center" style="width: 18rem;">
-                    <div class="card-body">
-                    Join a Meeting
-                    </div>
+                <img  class="img-center ro" src="https://imgur.com/5FoMP5J.jpg" />
+
+                <div class="mb-2 input-group" >
+
+                    <form class="form-inline mx-auto" action="/joinRoom" method="POST">
+                        <div class="form-group mx-sm-3 my-2">
+                          <input type="text" name="roomCode" class="form-control" placeholder="Enter room code" required>
+                        </div>
+                        <button type="submit" class="my-2 mx-1  btn btn-outline-secondary btn-sm"><i class="fas fa-sign-in-alt" aria-hidden="true"></i></button>
+                    </form>
+
+ 
+
                 </div>
             </div>
 
 
             <!-- page-settings  -->
-            <div id="page-settings" style="display: none;" >
-                <div id="overlay" class="overlay"></div>
-                <div class="container-fluid p-5">
+            <div id="page-settings" class="mt-5 pt-4" style="display: none;" >
+                <div class="container-fluid p-5 text-center page-settings-css" >
                     <div class="row">
                 
                         <div class="form-group col-md-12">
@@ -250,7 +276,7 @@
                             <a href="#" data-theme="light-theme" class="theme light-theme"></a>
                         </div>
                         <div class="form-group col-md-12">
-                            <p>Customize your default background image </p>
+                            <h4>Customize your default background image </h4>
                         </div>
                         <div class="form-group col-md-12">
                             <a href="#" data-bg="bg1" class="theme theme-bg selected"></a>
@@ -272,9 +298,9 @@
                         </div>
 
                     </div>
-            
+                    <hr>
             </div>
-                <hr>
+                
             </div>
         </main>
         <!-- page-content" -->

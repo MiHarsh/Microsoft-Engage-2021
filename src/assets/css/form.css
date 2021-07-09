@@ -205,7 +205,7 @@ input[type="password"] {
   font-size: 16px;
   font-weight: 200;
   margin-bottom: 45px;
-  padding: 5px 0 10px 0;
+  padding: 5px;
   background: transparent;
   border-bottom: 1px solid #4c5c72;
 }
