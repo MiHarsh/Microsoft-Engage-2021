@@ -170,7 +170,8 @@ window.addEventListener( 'load', () => {
         };
         
         socket.on('chat',(data)=>{
-            h.addChat({sender:data.sendername, msg:data.message, timestamp:snd.timestamp, room:data.room },'remote', false);
+            console.log(data);
+            h.addChat({sender:data.sendername, msg:data.message, timestamp:data.timestamp, room:data.room },'remote', false);
         });
              
     }

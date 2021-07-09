@@ -216,8 +216,7 @@ export default {
             msgBg = '';
 
             // notify when new message arrives
-
-            if(!fromDatabase){
+            if(!fromDatabase && !data.room ){
                 // silent data loading when retrieving from database
                 let audio = new Audio('../assets/tones/message.mp3');
                 audio.play();
@@ -245,7 +244,6 @@ export default {
         rowDiv.appendChild( colDiv );
         chatMsgDiv.appendChild( rowDiv );
 
-        // document.querySelector( '#chat-messages' ).appendChild( rowDiv );
 
         /**
          * Move focus to the newly added message but only if:

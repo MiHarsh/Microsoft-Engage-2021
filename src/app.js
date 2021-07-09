@@ -101,7 +101,7 @@ app.post('/signup', function(req,res){
             dbRef.child("users").child(email).set({rooms:['self'],
                 username:name, password:pass });
         }
-        res.cookie('name', e.val()[email]["username"]);
+        res.cookie('name', name);
         res.cookie('email',email);
         res.redirect('/dashboard');
     });
