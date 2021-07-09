@@ -208,10 +208,12 @@ export default {
         let contentAlign = 'justify-content-end';
         let senderName = 'You';
         let msgBg = 'bg-light';
+        let marginContent = 'mr-1';
 
         if ( senderType === 'remote' ) {
 
             contentAlign = 'justify-content-start';
+            marginContent = 'ml-1';
             senderName = data.sender;
             msgBg = '';
 
@@ -237,7 +239,7 @@ export default {
         colDiv.innerHTML = `<b>${xssFilters.inHTMLData( data.msg ).autoLink( { class: "text-info" , target: "_blank", rel: "nofollow"})}</b>`;
 
         let rowDiv = document.createElement( 'div' );
-        rowDiv.className = `row ${ contentAlign } mb-2`;
+        rowDiv.className = `row ${ marginContent } ${ contentAlign } mb-2`;
 
 
         colDiv.appendChild( infoDiv );

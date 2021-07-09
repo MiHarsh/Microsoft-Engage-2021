@@ -638,8 +638,8 @@ body {
 
 .img-center {
   display: block;
-  margin-top: 175px;
-  margin-bottom: 2px;
+  /* margin-top: 175px;
+  margin-bottom: 2px; */
   margin-left: auto;
   margin-right: auto;
   width: 300px;

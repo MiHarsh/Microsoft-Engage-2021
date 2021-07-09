@@ -53,17 +53,28 @@ window.addEventListener( 'load', () => {
                 // add corresponding chat sections to each room
 
                 base_container.innerHTML += ` 
-                <div id ="${data[i-1]}" hidden>
-                    <a class="btn btn-md btn-info mr-5 float-right rounded-0 " href="/join?room=${data[i-1]}"> Join meet</a>
-                    <div class="col-md-3  px-1 d-print-none mb-2 bg-info"style="border-radius:1%;margin-top:16px;" id='chat-pane'>
+                <div id ="${data[i-1]}"  class="row justify-content-center" hidden>
+                    <div class="col-10 pt-2">
+                        <a class="btn btn-md btn-outline-info float-right rounded-0 " href="/join?room=${data[i-1]}"> Join meet</a>
+                        
+                        <div class="row text-center">
+                            <h5 class="my-auto p-2" >Room Code: <span style="color:#5bc0de">${data[i-1]}</span></h5>
+                            <a class="mr-2 btn btn-sm btn-outline-info rounded-0 " href="/login?room=${data[i-1]}"><i class="fas fa-2x fa-copy"></i></a>
+                        </div>
+                        
+                    </div>
+
+                    
+                    <div class="col-md-9  px-1 d-print-none mb-2" 
+                        style="border-radius:1%;margin-top:16px;height: 88vh;border: 1px solid #5bc0de;" id='chat-pane'>
                     
                         <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
 
-                        <div id='chat-messages-${data[i-1]}'></div>
+                        <div id='chat-messages-${data[i-1]}' style = " overflow-y: scroll;height: 73vh;overflow-x: hidden;" ></div>
 
-                        <div class="mr-auto ml-auto mb-2 input-group" >
-                            <input type="text" id='chat-input-${data[i-1]}' class="form-control rounded-2 border-info" name="lname"placeholder="Type here...">
-                            <i class="fa my-2 mx-1 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${data[i-1]}"></i>
+                        <div class="mb-2 px-2 input-group" style="position: absolute; bottom: 0;" >
+                            <input type="text" id='chat-input-${data[i-1]}' class="col-11 form-control rounded-2 border-info" name="lname" placeholder="Type here...">
+                            <i class="fa my-2 mx-2 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${data[i-1]}"></i>
                         </div>
                     </div>
                     
@@ -178,8 +189,10 @@ window.addEventListener( 'load', () => {
 
         document.getElementById('getACode').addEventListener('click',()=>{
             let randomRoomCode = h.generateRandomString();
-            document.getElementById('showACode').innerText = randomRoomCode;
-
+            document.getElementById('showACode').innerHTML = `Room Code: <span style="color:#5bc0de">${randomRoomCode}</span>`;
+            document.getElementById('copyIcon').innerHTML = `<a class="mr-2 btn btn-sm btn-outline-info rounded-0 " href="/login?room=${randomRoomCode}">
+            <i class="fas fa-2x fa-copy"></i></a>`;
+            
             socket.emit('addNewRoomCode',{mail:usermail, roomName: randomRoomCode});
             //now add the new Room
 
@@ -196,17 +209,17 @@ window.addEventListener( 'load', () => {
 
             // add corresponding chat sections to each room
             base_container.innerHTML += ` 
-            <div id ="${randomRoomCode}" hidden>
+            <div id ="${randomRoomCode}" class="row justify-content-center" hidden>
                 <a class="btn btn-md btn-info mr-5 float-right rounded-0 " href="/join?room=${randomRoomCode}"> Join meet</a>
-                <div class="col-md-3  px-1 d-print-none mb-2 bg-info"style="border-radius:1%;margin-top:16px;" id='chat-pane'>
+                <div class="col-md-3  px-1 d-print-none mb-2 bg-info"style="border-radius:1%;margin-top:16px; height: 85vh;" id='chat-pane'>
                 
                     <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
 
                     <div id='chat-messages-${randomRoomCode}'></div>
 
-                    <div class="mr-auto ml-auto mb-2 input-group" >
-                        <input type="text" id='chat-input-${randomRoomCode}' class="form-control rounded-2 border-info" name="lname"placeholder="Type here...">
-                        <i class="fa my-2 mx-1 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${randomRoomCode}"></i>
+                    <div class="mb-2 input-group" style="position: absolute; bottom: 0;" >
+                        <input type="text" id='chat-input-${randomRoomCode}' class="col-11 form-control rounded-2 border-info" name="lname"placeholder="Type here...">
+                        <i class="fa my-2 mx-2 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${randomRoomCode}"></i>
                     </div>
                 </div>
             </div>`;

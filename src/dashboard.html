@@ -30,7 +30,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src='./assets/js/jquery-cookie.js'></script>
     <script src="./assets/js/calender.js"></script>
-    
+    <style>.dashboard-img{
+        max-width: 100%;
+        height: auto
+      }
+    .dashboard-row{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80vh;
+        border-style:inset  none none inset; 
+        border-top-color:rgb(154, 255, 255);
+        border-left-color:rgb(170, 255, 255);
+        background-color: rgb(161, 204, 204);
+        border-radius: 2%;
+    }
+    .meeting-style{background-color: rgb(161, 204, 204);
+        border-radius: 2%;
+        height: 80vh;
+        padding-top: 20vh;
+        padding-bottom: auto;
+    }
+    </style>
 </head>
 
 <body>
@@ -174,17 +195,16 @@
         
         <main class="page-content pt-2">
 
-            <div id = "page-dashboard">
+            <div id = "page-dashboard" >
 
-                <div class="row">
+                <div class="row mt-5 pt-5 ml-1 dashboard-row">
 
-                    <div class="col-5">
-                        Microsoft Teams
-                        More ways to be a team.
+                    <div class="col-sm-5 col-md-5 col-lg-4 text-center my-auto">
+                       <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode',Arial;color: rgb(124, 39, 124);"> Microsoft Teams</h3>
+                       <p style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode',Arial;">More ways to be a team.</p>
                     </div>
-
-                    <div class="col-7">
-                        <img alt="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                    <div class="col-sm-7 col-md-7 col-lg-8 my-auto">
+                        <img class="dashboard-img" alt="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
                         title="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
                         src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4E1CH?ver=dd82&amp;q=90&amp;m=2&amp;h=768&amp;w=1024&amp;b=%23FFFFFFFF&amp;aim=true">
                     </div>
@@ -200,11 +220,11 @@
             </div>
                     
 
-            <div id = "page-chatrooms">
+            <div id = "page-chatrooms" style="display: none;" >
 
             </div>
 
-            <div id = "schedule-meet" style="display: none;">
+            <div id = "schedule-meet" class="meeting-style mx-4 my-5 p" style="display: none;">
                 <!-- https://imgur.com/lG923r9 -->
                 <!-- https://imgur.com/rHH58PR -->
                 <!-- width="220px" height="250px" -->
@@ -213,18 +233,19 @@
 
 
                 <div class="mx-auto text-center">
-                    <button type="submit" id="getACode" class="my-2 mx-1  btn btn-outline-secondary btn-sm">Schedule a Meeting</button>
+                    <button type="submit" id="getACode" class="my-2 mx-1  btn btn-outline-secondary btn-md">Schedule a Meeting</button>
                 </div>
 
-                <div class="card card-center text-center" style="width: 18rem;">
-                    <div class="card-body">
-                    <h5 id="showACode">Schedule a Meeting</h5>
-                    </div>
+                
+                <div class="row justify-content-center text-center">
+                    <h5 class="my-auto p-2" id="showACode" ></h5>
+                    <span id="copyIcon" ></span>
+                    
                 </div>
 
 
             </div>
-            <div id = "join-meet" style="display: none;">
+            <div id = "join-meet" class="meeting-style mx-4 my-5 p"style="display: none;">
                 <!-- https://imgur.com/lG923r9 -->
                 <!-- https://imgur.com/rHH58PR -->
                 <img  class="img-center ro" src="https://imgur.com/5FoMP5J.jpg" />
