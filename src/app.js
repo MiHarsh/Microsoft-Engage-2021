@@ -69,6 +69,99 @@ app.get( '/join', ( req, res ) => {
     res.sendFile( __dirname + '/index.html' );
 });
 
+let bodyparser = require("body-parser");
+app.use(bodyparser.urlencoded({ extended: false }));
+app.use(bodyparser.json());
+
+
+// tell user to login -->
+app.get('/login',(req,res)=>{
+    res.render( __dirname + '/form.html',{room:req.query.room} );
+})
+
+
+// user signs up
+app.post('/signup', function(req,res){
+
+    var name = req.body.name;
+    var email =req.body.email.split("@")[0];
+    var pass = req.body.password;
+    let all_users = dbRef.child("users");
+    all_users.once('value',(e)=>{
+        if(e.val()[email]){
+            res.render( __dirname + '/form.html',{room:req.query.room} );
+        }
+        if(req.query.room){
+            
+            // store in database
+            dbRef.child("users").child(email).set({rooms:[req.query.room],
+                username:name, password:pass });
+        }
+        else{
+            dbRef.child("users").child(email).set({rooms:['self'],
+                username:name, password:pass });
+        }
+        res.cookie('name', e.val()[email]["username"]);
+        res.cookie('email',email);
+        res.redirect('/dashboard');
+    });
+
+});
+
+
+// users logs in
+app.post('/signin', function(req,res){
+
+    var email =req.body.email.split("@")[0];
+    var pass = req.body.password;
+
+    //check whether user is member or not 
+    let all_users = dbRef.child("users");
+    all_users.once('value',(e)=>{
+        
+        if(e.val()[email]){
+            if(e.val()[email]["password"] === pass){
+
+                if(req.query.room){
+                    // store in database
+                    room_ref = dbRef.child("users").child(email).child('rooms');
+    
+                    room_ref.once('value',(rm)=>{
+                        let currentRoomsLength = Object.keys(rm.val()).length;
+                        room_ref.child(String(currentRoomsLength)).set(req.query.room);
+                    });
+                }
+                res.cookie('name', e.val()[email]["username"]);
+                res.cookie('email',email);
+                res.redirect('/dashboard');
+            }
+        }
+        res.sendFile( __dirname + '/form.html' );
+    });
+    
+});
+
+// send user to dashboard -->
+app.get('/dashboard',(req,res)=>{
+    res.sendFile( __dirname + '/dashboard.html');
+});
+
+// homepage of our web app
+app.get('/',(req,res)=>{
+    res.sendFile(__dirname+ '/homepage.html');
+});
+
+
+// join instant meeting using code 
+app.post('/joinRoom',(req,res)=>{
+    res.redirect("/join?room=" + req.body.roomCode );
+});
+
+
+
+
+
+
 // when /stream namespace would be connected, then a stream callback is given 
 // What do you expect it to do ?
 
@@ -198,7 +291,6 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
 
     // remove User Name from mapSocketWith Names 
-
     socket.on("removeMyName",(elemId)=>{
         if(mapSocketWithNames[elemId]){
             delete mapSocketWithNames[elemId];
@@ -232,7 +324,6 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
 
 // user
-
 io.of('/user').on('connection',(socket)=>{
     console.log("new socket connected",socket.id);
     let users = '';
@@ -277,76 +368,3 @@ io.of('/user').on('connection',(socket)=>{
 });
 
 
-let bodyparser = require("body-parser");
-app.use(bodyparser.urlencoded({ extended: false }));
-app.use(bodyparser.json());
-
-
-// tell user to login -->
-app.get('/login',(req,res)=>{
-    res.render( __dirname + '/form.html',{room:req.query.room} );
-})
-
-// send user to dashboard -->
-app.get('/dashboard',(req,res)=>{
-    res.sendFile( __dirname + '/dashboard.html');
-});
-
-
-app.post('/signup', function(req,res){
-
-    var name = req.body.name;
-    var email =req.body.email.split("@")[0];
-    var pass = req.body.password;
-    let all_users = dbRef.child("users");
-    all_users.once('value',(e)=>{
-        if(e.val()[email]){
-            res.render( __dirname + '/form.html',{room:req.query.room} );
-        }
-        if(req.query.room){
-            
-            // store in database
-            dbRef.child("users").child(email).set({rooms:[req.query.room],
-                username:name, password:pass });
-        }
-        else{
-            dbRef.child("users").child(email).set({rooms:['self'],
-                username:name, password:pass });
-        }
-        res.cookie('name', e.val()[email]["username"]);
-        res.cookie('email',email);
-        res.redirect('/dashboard');
-    });
-
-});
-
-app.post('/signin', function(req,res){
-
-    var email =req.body.email.split("@")[0];
-    var pass = req.body.password;
-
-    //check whether user is member or not 
-    let all_users = dbRef.child("users");
-    all_users.once('value',(e)=>{
-        
-        if(e.val()[email]){
-            if(e.val()[email]["password"] === pass){
-
-                if(req.query.room){
-                    // store in database
-                    room_ref = dbRef.child("users").child(email).child('rooms');
-    
-                    room_ref.once('value',(rm)=>{
-                        let currentRoomsLength = Object.keys(rm.val()).length;
-                        room_ref.child(String(currentRoomsLength)).set(req.query.room);
-                    });
-                }
-                res.cookie('name', e.val()[email]["username"]);
-                res.cookie('email',email);
-                res.redirect('/dashboard');
-            }
-        }
-        res.sendFile( __dirname + '/form.html' );
-    });
-    
-});
