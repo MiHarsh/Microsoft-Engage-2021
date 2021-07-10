@@ -235,7 +235,7 @@ window.addEventListener( 'load', () => {
             // when copy to clipboard is clicked --->
             document.getElementById('cc-' + roomName).addEventListener('click',()=>{
                 const el = document.createElement('textarea');
-                el.value = location.href.split("/dashboard")[0] + "/login?room=" + roomName ;
+                el.value = location.href.split("/dashboard")[0] + "/login?room=" + roomName.split("meet-")[1] ;
                 el.setAttribute('readonly', '');
                 el.style.position = 'absolute';
                 el.style.left = '-9999px';
