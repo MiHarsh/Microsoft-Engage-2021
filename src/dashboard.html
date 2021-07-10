@@ -18,8 +18,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src='/socket.io/socket.io.js'></script>
     <script type="module" src='assets/js/rtc_login.js'></script>
-    <!-- <script type="module" src='assets/js/rtc.js'></script> -->
-    <script type="module" src='assets/js/events_login.js'></script>
     <!-- <link rel='stylesheet' href='assets/css/app.css' type="text/css"> -->
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./assets/css/sidebar-themes.css">
@@ -219,35 +217,29 @@
                     <article id="calendar"></article>
             </div>
                     
-
+            <!-- Section For Chats -->
             <div id = "page-chatrooms" style="display: none;" >
-
             </div>
 
+            <!-- Section For Scheduling Meets -->
             <div id = "schedule-meet" class="meeting-style mx-4 my-5 p" style="display: none;">
-                <!-- https://imgur.com/lG923r9 -->
-                <!-- https://imgur.com/rHH58PR -->
-                <!-- width="220px" height="250px" -->
 
                 <img  class="img-center ro" src="https://imgur.com/cMwMBnP.jpg" />
-
 
                 <div class="mx-auto text-center">
                     <button type="submit" id="getACode" class="my-2 mx-1  btn btn-outline-secondary btn-md">Schedule a Meeting</button>
                 </div>
 
-                
                 <div class="row justify-content-center text-center">
                     <h5 class="my-auto p-2" id="showACode" ></h5>
                     <span id="copyIcon" ></span>
                     
                 </div>
-
-
             </div>
+
+            <!-- Section For Joining Meets Using roomCode -->
             <div id = "join-meet" class="meeting-style mx-4 my-5 p"style="display: none;">
-                <!-- https://imgur.com/lG923r9 -->
-                <!-- https://imgur.com/rHH58PR -->
+
                 <img  class="img-center ro" src="https://imgur.com/5FoMP5J.jpg" />
 
                 <div class="mb-2 input-group" >
@@ -258,8 +250,6 @@
                         </div>
                         <button type="submit" class="my-2 mx-1  btn btn-outline-secondary btn-sm"><i class="fas fa-sign-in-alt" aria-hidden="true"></i></button>
                     </form>
-
- 
 
                 </div>
             </div>
@@ -339,7 +329,6 @@
         integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
     </script>
     <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-
 
     <script src="./assets/js/main.js"></script>
     

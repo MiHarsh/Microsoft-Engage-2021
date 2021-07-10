@@ -1,12 +1,7 @@
-let isAdmin = false;
-let startTime = "";
 import h from './helpers.js';
-
-
 
 window.addEventListener( 'load', () => {
 
-    console.log("entered ");
     const username = $.cookie('name') ;  
     const usermail = $.cookie('email'); 
 
@@ -15,8 +10,6 @@ window.addEventListener( 'load', () => {
 
     localStorage.setItem( 'username', username );
     localStorage.setItem( 'email', usermail );
-
-    
 
     if ( !usermail ) {
         window.location.replace(`${location.href.split('/')[0]}` + '/login' );
@@ -51,34 +44,7 @@ window.addEventListener( 'load', () => {
                 base_room_container.innerHTML += `<li id="room-list-${data[i-1]}"><a href="#${data[i-1]}">Room ${i}</a></li>`;
 
                 // add corresponding chat sections to each room
-
-                base_container.innerHTML += ` 
-                <div id ="${data[i-1]}"  class="row justify-content-center" hidden>
-                    <div class="col-10 pt-2">
-                        <a class="btn btn-md btn-outline-info float-right rounded-0 " href="/join?room=${data[i-1]}"> Join meet</a>
-                        
-                        <div class="row text-center">
-                            <h5 class="my-auto p-2" >Room Code: <span style="color:#5bc0de">${data[i-1]}</span></h5>
-                            <a class="mr-2 btn btn-sm btn-outline-info rounded-0 " href="/login?room=${data[i-1]}"><i class="fas fa-2x fa-copy"></i></a>
-                        </div>
-                        
-                    </div>
-
-                    
-                    <div class="col-md-9  px-1 d-print-none mb-2" 
-                        style="border-radius:1%;margin-top:16px;height: 88vh;border: 1px solid #5bc0de;" id='chat-pane'>
-                    
-                        <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
-
-                        <div id='chat-messages-${data[i-1]}' style = " overflow-y: scroll;height: 73vh;overflow-x: hidden;" ></div>
-
-                        <div class="mb-2 px-2 input-group" style="position: absolute; bottom: 0;" >
-                            <input type="text" id='chat-input-${data[i-1]}' class="col-11 form-control rounded-2 border-info" name="lname" placeholder="Type here...">
-                            <i class="fa my-2 mx-2 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${data[i-1]}"></i>
-                        </div>
-                    </div>
-                    
-                </div>`;
+                base_container.innerHTML += createRoomChatHolder(data[i-1]);
 
             }
 
@@ -102,6 +68,9 @@ window.addEventListener( 'load', () => {
                 //Chat Section #####################################################################
                 // add listener, to append new messages to database
                 addNewChatsToDatabase(element.id);
+
+                // add copyToClipboard
+                copyClipboard(element.id);
 
             });
                 
@@ -132,6 +101,57 @@ window.addEventListener( 'load', () => {
                 }
             }
         });
+
+        socket.on('chat',(data)=>{
+            h.addChat({sender:data.sendername, msg:data.message, timestamp:data.timestamp, room:data.room },'remote', false);
+        });
+
+
+        document.getElementById('getACode').addEventListener('click',()=>{
+            let randomRoomCode = h.generateRandomString();
+            document.getElementById('showACode').innerHTML = `Room Code: <span style="color:#5bc0de">${randomRoomCode}</span>`;
+            document.getElementById('copyIcon').innerHTML = `<a class="mr-2 btn btn-sm btn-outline-info rounded-0 " title="Copy Invite Link" id="cc-meet-${randomRoomCode}">
+            <i class="fas fa-2x fa-copy"></i></a>`;
+            
+            socket.emit('addNewRoomCode',{mail:usermail, roomName: randomRoomCode});
+
+            //now add the new Room
+            let base_room_container = document.getElementById("room-list-update");
+            let base_container = document.querySelector("#page-chatrooms");
+
+            // update number of rooms
+            let currentRoomsLength = document.getElementById("updateRoomLength").innerText;
+            document.getElementById("updateRoomLength").innerText = Number(currentRoomsLength) + 1 ;
+
+            
+            // add rooms in the dropdown menu
+            base_room_container.innerHTML += `<li id="room-list-${randomRoomCode}"><a href="#${randomRoomCode}">Room ${Number(currentRoomsLength) +1}</a></li>`;
+
+            // add corresponding chat sections to each room
+            base_container.innerHTML += createRoomChatHolder(randomRoomCode);
+
+
+            // add listener for newly added room
+            addNewChatsToDatabase(randomRoomCode);
+
+            //register this newly created room for user
+            socket.emit('registerNewRoom',{email:usermail, room:randomRoomCode});
+
+            document.getElementById("room-list-" + randomRoomCode).addEventListener('click',(e2)=>{
+
+                Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((ele)=>{
+                    ele.hidden = true;
+                });
+                document.getElementById(randomRoomCode).hidden = false;
+
+            });
+
+            // add copyToClipboard
+            copyClipboard("meet-"+randomRoomCode);
+
+        });
+
+        // userful functions defined here #############################33
 
         function sendMsg(data){
             let snd = {
@@ -181,67 +201,52 @@ window.addEventListener( 'load', () => {
             } );
         }
 
-        
-        socket.on('chat',(data)=>{
-            h.addChat({sender:data.sendername, msg:data.message, timestamp:data.timestamp, room:data.room },'remote', false);
-        });
-
-
-        document.getElementById('getACode').addEventListener('click',()=>{
-            let randomRoomCode = h.generateRandomString();
-            document.getElementById('showACode').innerHTML = `Room Code: <span style="color:#5bc0de">${randomRoomCode}</span>`;
-            document.getElementById('copyIcon').innerHTML = `<a class="mr-2 btn btn-sm btn-outline-info rounded-0 " href="/login?room=${randomRoomCode}">
-            <i class="fas fa-2x fa-copy"></i></a>`;
-            
-            socket.emit('addNewRoomCode',{mail:usermail, roomName: randomRoomCode});
-            //now add the new Room
-
-            let base_room_container = document.getElementById("room-list-update");
-            let base_container = document.querySelector("#page-chatrooms");
-
-            // update number of rooms
-            let currentRoomsLength = document.getElementById("updateRoomLength").innerText;
-            document.getElementById("updateRoomLength").innerText = Number(currentRoomsLength) + 1 ;
-
-            
-            // add rooms in the dropdown menu
-            base_room_container.innerHTML += `<li id="room-list-${randomRoomCode}"><a href="#${randomRoomCode}">Room ${Number(currentRoomsLength) +1}</a></li>`;
-
-            // add corresponding chat sections to each room
-            base_container.innerHTML += ` 
-            <div id ="${randomRoomCode}" class="row justify-content-center" hidden>
-                <a class="btn btn-md btn-info mr-5 float-right rounded-0 " href="/join?room=${randomRoomCode}"> Join meet</a>
-                <div class="col-md-3  px-1 d-print-none mb-2 bg-info"style="border-radius:1%;margin-top:16px; height: 85vh;" id='chat-pane'>
-                
-                    <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
-
-                    <div id='chat-messages-${randomRoomCode}'></div>
-
-                    <div class="mb-2 input-group" style="position: absolute; bottom: 0;" >
-                        <input type="text" id='chat-input-${randomRoomCode}' class="col-11 form-control rounded-2 border-info" name="lname"placeholder="Type here...">
-                        <i class="fa my-2 mx-2 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${randomRoomCode}"></i>
+        // create placeholders for chats, parameter --> roomName
+        function createRoomChatHolder(roomName){
+            return `
+                <div id ="${roomName}"  class="row justify-content-center" hidden>
+                    <div class="col-10 pt-2">
+                        <a class="btn btn-md btn-outline-info float-right rounded-0 " href="/join?room=${roomName}"> Join meet</a>
+                        
+                        <div class="row text-center">
+                            <h5 class="my-auto p-2" >Room Code: <span style="color:#5bc0de">${roomName}</span></h5>
+                            <a class="mr-2 btn btn-sm btn-outline-info rounded-0 " id="cc-${roomName}" title="Copy Invite Link" ><i class="fas fa-2x fa-copy"></i></a>
+                        </div>
+                        
                     </div>
-                </div>
-            </div>`;
 
+                    <div class="col-md-9  px-1 d-print-none mb-2" 
+                        style="border-radius:1%;margin-top:16px;height: 88vh;border: 1px solid #5bc0de;" id='chat-pane'>
+                    
+                        <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
 
-            // add listener for newly added room
-            addNewChatsToDatabase(randomRoomCode);
+                        <div id='chat-messages-${roomName}' style = " overflow-y: scroll;height: 73vh;overflow-x: hidden;" ></div>
 
-            //register this newly created room for user
-            socket.emit('registerNewRoom',{email:usermail, room:randomRoomCode});
+                        <div class="mb-2 px-2 input-group" style="position: absolute; bottom: 0;" >
+                            <input type="text" id='chat-input-${roomName}' class="col-11 form-control rounded-2 border-info" name="lname" placeholder="Type here...">
+                            <i class="fa my-2 mx-2 fa-paper-plane btn btn-outline-secondary btn-sm" aria-hidden="true" id="chat-icon-send-${roomName}"></i>
+                        </div>
+                    </div>
+            
+                </div>`;
+        }
 
-            document.getElementById("room-list-" + randomRoomCode).addEventListener('click',(e2)=>{
-
-                Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((ele)=>{
-                    ele.hidden = true;
-                });
-                document.getElementById(randomRoomCode).hidden = false;
-
+        // adds event listner to copy the room invite link on click 
+        function copyClipboard(roomName){
+            // when copy to clipboard is clicked --->
+            document.getElementById('cc-' + roomName).addEventListener('click',()=>{
+                const el = document.createElement('textarea');
+                el.value = location.href.split("/dashboard")[0] + "/login?room=" + roomName ;
+                el.setAttribute('readonly', '');
+                el.style.position = 'absolute';
+                el.style.left = '-9999px';
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
             });
 
-        });
-
-             
+        }
+ 
     }
 } );
