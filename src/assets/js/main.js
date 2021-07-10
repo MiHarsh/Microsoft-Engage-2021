@@ -123,6 +123,7 @@ jQuery(function ($) {
     e.preventDefault();
     $(".page-content").children().hide();
     $("#page-chatrooms").show();
+    // $("#self").attr('hidden',false);
     
   });
 

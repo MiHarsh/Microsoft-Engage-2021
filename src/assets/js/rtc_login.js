@@ -50,7 +50,6 @@ window.addEventListener( 'load', () => {
 
             Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((element)=>{
 
-
                 document.getElementById("room-list-" + element.id).addEventListener('click',(e2)=>{
 
                     Array.prototype.slice.call(document.getElementById("page-chatrooms").children).forEach((ele)=>{
