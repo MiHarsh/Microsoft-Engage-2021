@@ -94,11 +94,11 @@ app.post('/signup', function(req,res){
         if(req.query.room){
             
             // store in database
-            dbRef.child("users").child(email).set({rooms:['self',req.query.room],
+            dbRef.child("users").child(email).set({rooms:[email,req.query.room],
                 username:name, password:pass });
         }
         else{
-            dbRef.child("users").child(email).set({rooms:['self'],
+            dbRef.child("users").child(email).set({rooms:[email],
                 username:name, password:pass });
         }
         res.cookie('name', name);
