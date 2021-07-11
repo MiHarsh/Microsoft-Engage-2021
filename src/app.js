@@ -128,7 +128,11 @@ app.post('/signin', function(req,res){
     
                     room_ref.once('value',(rm)=>{
                         let currentRoomsLength = Object.keys(rm.val()).length;
-                        room_ref.child(String(currentRoomsLength)).set(req.query.room);
+
+                        if(!Object.values(rm.val()).includes(req.query.room)){
+                            room_ref.child(String(currentRoomsLength)).set(req.query.room);
+                        }
+                        
                     });
                 }
                 res.cookie('name', e.val()[email]["username"]);
