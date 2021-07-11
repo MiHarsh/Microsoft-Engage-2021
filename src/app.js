@@ -220,9 +220,9 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         socket.to( data.room ).emit( 'new user', { socketId: data.socketId } );
     });
 
-    // if admin denies the permission
+    // if admin denies the permission, send info to the denied socket
     socket.on('access-denied',(data)=>{
-        console.log("Access denied by user",data);
+        socket.to(data.socketId).emit("access-denied");
     });
 
     // send chat details when requested.

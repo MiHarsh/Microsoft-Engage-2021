@@ -381,6 +381,9 @@ export default {
         for ( let i = 0; i < totalRemoteVideosDesktop; i++ ) {
             elem[i].style.width = newWidth;
         }
+
+        // dont resize admit-card
+        document.getElementById('user-lobby').style.width = '35%' ;
     },
 
     // will display the popup --->
