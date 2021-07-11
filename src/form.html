@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Login/SignUp</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Add the slick-theme.css if you want default styling -->
+        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+        <!-- Add the slick-theme.css if you want default styling -->
+        <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
+
+        <link rel="shortcut icon" type="image/png" href="./favicon.ico" />
+        
+    </head>
+    <body>
+        <div class="main-box">
+            <div class="slider-cont">
+              <div class="signup-slider">
+                <div class="img-txt">
+                  <div class="img-layer"></div>
+                  <h1>The hardest part of starting up is starting out for you.</h1>
+                  <img src="https://static.pexels.com/photos/33972/pexels-photo.jpg"/>
+                </div>
+                <div class="img-txt">
+                  <div class="img-layer"></div>
+                  <h1>We understand you and your business, We have the right solutions for you.</h1>
+                  <img src="https://static.pexels.com/photos/257897/pexels-photo-257897.jpeg"/>
+                </div>
+                <div class="img-txt">
+                  <div class="img-layer"></div>
+                  <h1>Join US Now!</h1>
+                  <img src="https://static.pexels.com/photos/317383/pexels-photo-317383.jpeg"/>
+                </div>
+              </div>
+            </div>
+            
+            
+            <div class="form-cont">
+          
+              <div class="top-buttons">
+                <button class="to-signup top-active-button">
+                  Sign Up
+                </button>
+                <button class="to-signin">
+                  Sign In
+                </button>
+              </div>
+              
+              <div class="form form-signup">
+                <form action="/signup?room=<%= room %>" method="POST">
+                  <lable>FULL NAME</lable>
+                  <input type="text" name="name" placeholder="Your full name">
+                  <lable>E-MAIL</lable>
+                  <input type="email" name="email" placeholder="Your e-mail">
+                  <lable>PASSWORD</lable>
+                  <input type="password" name="password" placeholder="Your password">
+                  <p class="terms">
+                    <input type="checkbox">
+                    I agree all statements in <a href="#" class="lined-link">terms of service</a>
+                  </p>
+                  <input type="submit" class="form-btn" value="Sign Up"/>
+                  <br><br>
+                  <a href="#" class="lined-link to-signin-link">I'm already member</a>
+                </form>
+              </div>
+          
+              <div class="form form-signin">
+                <form action="/signin?room=<%= room %>" method="POST">
+                  <lable>E-MAIL</lable>
+                  <input type="email" name="email" placeholder="Your e-mail">
+                  <lable>PASSWORD</lable>
+                  <input type="password" name="password" placeholder="Your password">
+                  <input type="submit" class="form-btn" value="Sign In"/>
+                  <br><br>
+                  <a href="#" class="lined-link to-signup-link">Create new account</a>
+                </form>
+              </div>
+            </div>
+            <div class="clear-fix"></div>
+          </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+        <script type="module" src='./assets/js/form.js'></script>
+        <link rel="stylesheet" href="./assets/css/form.css">
+        
+    </body>
+</html>

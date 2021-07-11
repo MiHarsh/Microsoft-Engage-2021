@@ -1,0 +1,155 @@
+jQuery(function ($) {
+  // Dropdown menu
+  $('.sidebar-dropdown > a').click(function () {
+    $('.sidebar-submenu').slideUp(200);
+    if ($(this).parent().hasClass('active')) {
+      $('.sidebar-dropdown').removeClass('active');
+      $(this).parent().removeClass('active');
+    } else {
+      $('.sidebar-dropdown').removeClass('active');
+      $(this).next('.sidebar-submenu').slideDown(200);
+      $(this).parent().addClass('active');
+    }
+  });
+
+  //toggle sidebar
+  $('#toggle-sidebar').click(function () {
+    $('.page-wrapper').toggleClass('toggled');
+  });
+
+  // bind hover if pinned is initially enabled
+  if ($('.page-wrapper').hasClass('pinned')) {
+    $('#sidebar').hover(
+      function () {
+        $('.page-wrapper').addClass('sidebar-hovered');
+      },
+      function () {
+        $('.page-wrapper').removeClass('sidebar-hovered');
+      }
+    );
+  }
+
+  //Pin sidebar
+  $('#pin-sidebar').click(function () {
+    if ($('.page-wrapper').hasClass('pinned')) {
+      // unpin sidebar when hovered
+      $('.page-wrapper').removeClass('pinned');
+      $('#sidebar').unbind('hover');
+    } else {
+      $('.page-wrapper').addClass('pinned');
+      $('#sidebar').hover(
+        function () {
+          
+          $('.page-wrapper').addClass('sidebar-hovered');
+        },
+        function () {
+         
+          $('.page-wrapper').removeClass('sidebar-hovered');
+        }
+      );
+    }
+  });
+
+  //toggle sidebar overlay
+  $('#overlay').click(function () {
+    $('.page-wrapper').toggleClass('toggled');
+  });
+
+  //switch between themes
+  var themes =
+    'default-theme legacy-theme chiller-theme ice-theme cool-theme light-theme';
+  $('[data-theme]').click(function () {
+    $('[data-theme]').removeClass('selected');
+    $(this).addClass('selected');
+    $('.page-wrapper').removeClass(themes);
+    $('.page-wrapper').addClass($(this).attr('data-theme'));
+  });
+
+  // switch between background images
+  var bgs = 'bg1 bg2 bg3 bg4';
+  $('[data-bg]').click(function () {
+    $('[data-bg]').removeClass('selected');
+    $(this).addClass('selected');
+    $('.page-wrapper').removeClass(bgs);
+    $('.page-wrapper').addClass($(this).attr('data-bg'));
+  });
+
+  // toggle background image
+  $('#toggle-bg').change(function (e) {
+    e.preventDefault();
+    $('.page-wrapper').toggleClass('sidebar-bg');
+  });
+
+  // toggle border radius
+  $('#toggle-border-radius').change(function (e) {
+    e.preventDefault();
+    $('.page-wrapper').toggleClass('border-radius-on');
+  });
+
+  //custom scroll bar is only used on desktop
+  if (
+    !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    $('.sidebar-content').mCustomScrollbar({
+      axis: 'y',
+      autoHideScrollbar: true,
+      scrollInertia: 300,
+    });
+    $('.sidebar-content').addClass('desktop');
+  }
+
+  // show settings when settings btn clicked
+  $('#open-settings').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#page-settings").show();
+    
+  });
+
+  // open Dashboard
+  $('#open-dashboard').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#page-dashboard").show();
+    
+  });
+
+  // open Rooms
+  $('#chat-roomlist-parent').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#page-chatrooms").show();
+    // $("#self").attr('hidden',false);
+    
+  });
+
+  // open Schedule Meeting
+  $('#schdeule-meet-icon').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#schedule-meet").show();
+    
+  });
+
+  // open Join Meeting
+  $('#join-meet-icon').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#join-meet").show();
+    
+  });
+  
+  
+  // open Page Calender
+  $('#show-calender').click((e)=>{
+    e.preventDefault();
+    $(".page-content").children().hide();
+    $("#page-calendar").show();
+    
+  });
+
+    
+});
+

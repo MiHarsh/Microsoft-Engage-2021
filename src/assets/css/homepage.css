@@ -1,0 +1,173 @@
+
+
+.btns {
+  position: absolute;
+  top: 50px;
+  right: 60px;
+}
+
+.btn {
+  width: 170px;
+  padding: 10px 15px;
+  margin-right: 20px;
+  border-radius: 50px;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  outline: none;
+  cursor: pointer;
+  color: #fff;
+  border: 2px solid tomato;
+  transition: transform 0.3s;
+}
+
+
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.form-container {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.7);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s;
+}
+
+.disable {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  width: 400px;
+  background: linear-gradient(rgba(148, 42, 42, 0.8), rgba(185, 129, 129, 0.6));
+  background-size: cover;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.5s;
+}
+
+.display {
+  opacity: 1;
+  visibility: visible;
+}
+
+.x-btn {
+  position: absolute;
+  right: 20px;
+  font-size: 50px;
+  color: #222;
+  cursor: pointer;
+}
+
+.form-header {
+  text-align: center;
+  margin: 80px 0 150px 0;
+  color: #fff;
+}
+
+.form-header h1 {
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 40px;
+  font-weight: 300;
+  margin-bottom: 30px;
+}
+
+.form-header h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 25px;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input-group {
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.input-group input {
+  width: 250px;
+  padding: 15px 15px 15px 50px;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 16px;
+  color: #ddd;
+}
+
+.input-group i {
+  position: absolute;
+  top: 13px;
+  left: 17px;
+  font-size: 18px;
+  color: #aaa;
+}
+
+.form button {
+  width: 310px;
+  padding: 12px;
+  border: none;
+  outline: none;
+  border-radius: 30px;
+  background-color: #aa4b42;
+  color: #fff;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  margin: 10px 0 50px 0;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.form button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+.form button:active {
+  transform: translateY(0);
+}
+@media only screen and (max-width: 1200px) {
+  h1 {
+    padding-top: 10px;
+  }
+  .btns {
+    display: flex;
+    justify-content: center;
+    flex-flow: wrap;
+  }
+}
+@media only screen and (max-width: 550px) {
+  h1 {
+    padding-top: 20px;
+  }
+  .btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-flow: wrap;
+  }
+}

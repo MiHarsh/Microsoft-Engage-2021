@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Responsive sidebar template with sliding effect and dropdown menu based on bootstrap 3">
+    <title>Microsoft Teams</title>
+
+    <!-- using online links -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+        integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link rel="stylesheet" href="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src='/socket.io/socket.io.js'></script>
+    <script type="module" src='assets/js/rtc_login.js'></script>
+    <!-- <link rel='stylesheet' href='assets/css/app.css' type="text/css"> -->
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/sidebar-themes.css">
+    <link rel="shortcut icon" type="image/png" href="./favicon.ico" />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js'></script>
+    <script src='https://cdn.rawgit.com/yahoo/xss-filters/master/dist/xss-filters.js'></script>
+    <script src='assets/js/autolink.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='./assets/js/jquery-cookie.js'></script>
+    <script src="./assets/js/calender.js"></script>
+    <style>.dashboard-img{
+        max-width: 100%;
+        height: auto
+      }
+    .dashboard-row{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 80vh;
+       
+        background-color: rgb(46 46 46);
+        border-radius: 3%;
+    }
+    .meeting-style{background-color: rgb(161, 204, 204);
+        border-radius: 2%;
+        height: 80vh;
+        padding-top: 20vh;
+        padding-bottom: auto;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="page-wrapper default-theme sidebar-bg bg1 toggled">
+        <nav id="sidebar" class="sidebar-wrapper">
+            <div class="sidebar-content">
+                <!-- sidebar-brand  -->
+                <div class="sidebar-item sidebar-brand">
+                    <a href="#">Welcome To Teams Clone</a>
+                </div>
+                <!-- sidebar-header  -->
+                <div class="sidebar-item sidebar-header d-flex flex-nowrap">
+                    <div class="user-pic">
+                        <img class="img-responsive img-rounded" src="./assets/img/user.jpg" alt="User picture">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">
+                            <strong> </strong>
+                        </span>
+                        <span id="user-email" hidden> </span>
+                        <span class="user-role">Member</span>
+                        <span class="user-status">
+                            <i class="fa fa-circle"></i>
+                            <span>Online</span>
+                        </span>
+                    </div>
+                </div>
+                <!-- sidebar-search  -->
+                <div class="sidebar-item sidebar-search">
+                    <div>
+                        <div class="input-group">
+                            <input type="text" class="form-control search-menu" placeholder="Search...">
+                            <div class="input-group-append">
+                                <span class="input-group-text">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- sidebar-menu  -->
+                <div class=" sidebar-item sidebar-menu">
+                    <ul>
+                        <li class="header-menu">
+                            <span>General</span>
+                        </li>
+                        <li class="sidebar">
+                            <a href="#">
+                                <i class="fa fa-tachometer-alt"></i>
+                                <span class="menu-text" id="open-dashboard" >Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-dropdown" id="chat-roomlist-parent">
+                            <a href="#">
+                                <i class="fas fa-comment-dots"></i>
+                                <span class="menu-text">Chats</span>
+                                <span class="badge badge-pill badge-danger" id="updateRoomLength" ></span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul id="room-list-update" ></ul>
+                            </div>
+                        </li>
+                        
+  
+                        <li class="sidebar-dropdown">
+                            <a href="#">
+                                <i class="fa fa-handshake" aria-hidden="true"></i>
+                                <span class="menu-text">Meetings</span>
+                            </a>
+                            <div class="sidebar-submenu">
+                                <ul>
+                                    <li>
+                                        <a href="#schedule" id="schdeule-meet-icon">Schedule</a>
+                                    </li>
+                                    <li>
+                                        <a href="#join" id="join-meet-icon" >Join</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="header-menu">
+                            <span>Extra</span>
+                        </li>
+                        <li>
+                            <a href="#" id="show-calender" >
+                                <i class="fa fa-calendar"></i>
+                                <span class="menu-text">Calendar</span>
+                            </a>
+                        </li>
+                        <li>
+                        </li>
+                    </ul>
+                </div>
+                <!-- sidebar-menu  -->
+            </div>
+
+            <!-- sidebar-footer  -->
+            <div class="sidebar-footer">
+
+                <div id="open-settings">
+                    <a href="#">
+                        <i class="fa fa-cog"></i>&nbsp;Settings
+                    </a>
+                </div>
+
+                <div>
+                    <a href="/login">
+                        <i class="fa fa-power-off"></i>&nbsp;Logout
+                    </a>
+                </div>
+                <div class="pinned-footer">
+                    <a href="#">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
+        
+        <main class="page-content pt-2">
+
+            <div id = "page-dashboard" >
+
+                <div class="row mt-5 pt-5 ml-1 dashboard-row">
+
+                    <div class="col-sm-5 col-md-5 col-lg-4 text-center my-auto">
+                       <b><h1 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode',Arial;color: rgb(156, 193, 223);"> Microsoft Teams</h1></b>
+                       <p style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode',Arial; color:white">More ways to be a team.</p>
+                    </div>
+                    <div class="col-sm-7 col-md-7 col-lg-8 my-auto">
+                        <img class="dashboard-img" alt="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                        title="Animated image of video conference participants shown in Together mode in Microsoft Teams." 
+                        src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE4E1CH?ver=dd82&amp;q=90&amp;m=2&amp;h=768&amp;w=1024&amp;b=%23FFFFFFFF&amp;aim=true">
+                    </div>
+                </div>
+                
+            
+            </div>
+
+            <div id = "page-calendar" class="container_calender" style="display: none;" >
+                    <div id="prev">Prev</div>
+                    <div id="next">Next</div>
+                    <article id="calendar"></article>
+            </div>
+                    
+            <!-- Section For Chats -->
+            <div id = "page-chatrooms" style="display: none;" >
+            </div>
+
+            <!-- Section For Scheduling Meets -->
+            <div id = "schedule-meet" class="meeting-style mx-4 my-5 p" style="display: none;">
+
+                <img  class="img-center ro" src="https://imgur.com/cMwMBnP.jpg" />
+
+                <div class="mx-auto text-center">
+                    <button type="submit" id="getACode" class="my-2 mx-1  btn btn-info btn-md">Schedule a Meeting</button>
+                </div>
+
+                <div class="row justify-content-center text-center">
+                    <h5 class="my-auto p-2" id="showACode" ></h5>
+                    <span id="copyIcon" ></span>
+                    
+                </div>
+            </div>
+
+            <!-- Section For Joining Meets Using roomCode -->
+            <div id = "join-meet" class="meeting-style mx-4 my-5 p"style="display: none;">
+
+                <img  class="img-center ro" src="https://imgur.com/5FoMP5J.jpg" />
+
+                <div class="mb-2 input-group" >
+
+                    <form class="form-inline mx-auto" action="/joinRoom" method="POST">
+                        <div class="form-group mx-sm-3 my-2">
+                          <input type="text" name="roomCode" class="form-control" placeholder="Enter room code" required>
+                        </div>
+                        <button type="submit" class="my-2 mx-1  btn btn-info btn-sm"><i class="fas fa-sign-in-alt" aria-hidden="true"></i></button>
+                    </form>
+
+                </div>
+            </div>
+
+
+            <!-- page-settings  -->
+            <div id="page-settings" class="mt-5 pt-4" style="display: none;" >
+                <div class="container-fluid p-5 text-center page-settings-css" >
+                    <div class="row">
+                
+                        <div class="form-group col-md-12">
+                            <a id="toggle-sidebar" class="btn btn-secondary rounded-0" href="#">
+                                <span>Toggle Sidebar</span>
+                            </a>
+                            <a id="pin-sidebar" class="btn btn-outline-secondary rounded-0" href="#">
+                                <span>Pin Sidebar</span>
+                            </a>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <h3>Change Your Default theme</h3>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <a href="#" data-theme="default-theme" class="theme default-theme selected"></a>
+                            <a href="#" data-theme="chiller-theme" class="theme chiller-theme"></a>
+                            <a href="#" data-theme="legacy-theme" class="theme legacy-theme"></a>
+                            <a href="#" data-theme="ice-theme" class="theme ice-theme"></a>
+                            <a href="#" data-theme="cool-theme" class="theme cool-theme"></a>
+                            <a href="#" data-theme="light-theme" class="theme light-theme"></a>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <h4>Customize your default background image </h4>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <a href="#" data-bg="bg1" class="theme theme-bg selected"></a>
+                            <a href="#" data-bg="bg2" class="theme theme-bg"></a>
+                            <a href="#" data-bg="bg3" class="theme theme-bg"></a>
+                            <a href="#" data-bg="bg4" class="theme theme-bg"></a>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="toggle-bg" checked>
+                                <label class="custom-control-label" for="toggle-bg">Set Background image</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="toggle-border-radius">
+                                <label class="custom-control-label" for="toggle-border-radius">Set Border radius</label>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr>
+            </div>
+                
+            </div>
+        </main>
+        <!-- page-content" -->
+    </div>
+    <!-- page-wrapper -->
+
+    <!-- using online scripts -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='./assets/js/jquery-cookie.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous">
+    </script>
+    <script src="//malihu.github.io/custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+
+    <script src="./assets/js/main.js"></script>
+    
+</body>
+
+</html>

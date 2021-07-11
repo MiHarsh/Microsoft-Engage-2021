@@ -4,10 +4,15 @@ import h from './helpers.js';
 
 window.addEventListener( 'load', () => {
 
-    console.log("defined just now");
     const room = h.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
+    let usermail = sessionStorage.getItem( 'email' );
 
+    if(!usermail){
+        usermail = "unknown";
+    }
+
+    // if room is not defined
     if ( !room ) {
         document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
     }
@@ -48,16 +53,15 @@ window.addEventListener( 'load', () => {
             } );
 
             // admin would trigger the timer popup, since he'll be present before others join
+            // for now, use 1:30 minutes for Have a break.
             socket.on( 'iAmAdmin',()=>{
                 isAdmin = true;
                 startTime = Date.now();
-                console.log("welcome admin");
 
                 const interval = setInterval(()=>{
-                    if((Date.now() - startTime) > 60*1000){
+                    if((Date.now() - startTime) > 90*1000){
                         socket.emit("sendPollToEveryUser",room);
                         clearInterval(interval);
-                        console.log("send everyone");
                     }
                 },1000);
 
@@ -71,7 +75,7 @@ window.addEventListener( 'load', () => {
                     let socketid_admit = data.socketId;
                     let roomName_admit = data.room;
 
-                    // ############################### Fresh Code ###########################
+                    // ###############################  ###########################
                     
                     let base_container = document.getElementById("user-admit");
                     let newRequestElement = document.createElement("div");
@@ -142,6 +146,16 @@ window.addEventListener( 'load', () => {
                 }
             });
 
+            // ########################################################################
+            // if admin denied access -->
+
+            socket.on('access-denied',()=>{
+                document.getElementById('acc-denied').hidden = false;
+            });
+
+            document.getElementById('back-to-dashboard').addEventListener('click',()=>{
+                window.location.href =  "/dashboard";
+            });
 
             //##########################################################################
 
@@ -219,7 +233,6 @@ window.addEventListener( 'load', () => {
                 let audio = new Audio('../assets/tones/user-joined.mp3');
                 audio.play();
 
-                console.log(data);
                 socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
                 pc.push( data.socketId );
                 init( true, data.socketId );
@@ -273,9 +286,32 @@ window.addEventListener( 'load', () => {
                 }
             } );
 
+            // add a click listener, to load chats, only when user asks
+            document.querySelector( '#toggle-chat-pane' ).addEventListener( 'click', ( e ) => {
+                if(document.getElementById("chat-messages").innerHTML === ""){
+                    socket.emit("get-prev-chat",room);
+                }
+            });
+
+            // load previous chat history
+            socket.on('room-chat-details',(data)=>{
+                if(data.chats){
+                    let data_length = Object.keys(data.chats).length;
+                    if(data_length){
+                        let ts = Object.keys(data.chats);
+                        for(var i=0;i<data_length;i++){
+
+                            h.addChat({sender:data.chats[ts[i]].sender,
+                                msg:data.chats[ts[i]].message,
+                            timestamp:Number(ts[i]) },'remote', true);
+
+                        }
+                    }
+                }
+            });
 
             socket.on( 'chat', ( data ) => {
-                h.addChat( data, 'remote' );
+                h.addChat( data, 'remote',false );
             } );
         } );
 
@@ -296,14 +332,15 @@ window.addEventListener( 'load', () => {
             let data = {
                 room: room,
                 msg: msg,
-                sender: username
+                sender: username,
+                usermail : usermail
             };
 
             //emit chat message
             socket.emit( 'chat', data );
 
             //add localchat
-            h.addChat( data, 'local' );
+            h.addChat({sender:username,msg:msg, timestamp:Date.now() },'local', false);
         }
 
 
@@ -362,8 +399,6 @@ window.addEventListener( 'load', () => {
 
             //add
             pc[partnerName].ontrack = ( e ) => {
-                console.log(partnerName);
-                console.log(e);
                 let str = e.streams[0];
                 if ( document.getElementById( `${ partnerName }-video` ) ) {
                     document.getElementById( `${ partnerName }-video` ).srcObject = str;
@@ -390,7 +425,7 @@ window.addEventListener( 'load', () => {
 
                     //create a new div for card
                     let cardDiv = document.createElement( 'div' );
-                    cardDiv.className = 'card card-sm';
+                    cardDiv.className = 'card card-sm vid-card';
                     cardDiv.id = partnerName;
                     cardDiv.appendChild( newVid );
                     cardDiv.appendChild( controlDiv );
@@ -420,7 +455,7 @@ window.addEventListener( 'load', () => {
             };
 
 
-
+            // signaling state change
             pc[partnerName].onsignalingstatechange = ( d ) => {
                 switch ( pc[partnerName].signalingState ) {
                     case 'closed':
@@ -683,5 +718,21 @@ window.addEventListener( 'load', () => {
                 } ).catch( () => { } );
             }
         });
+
+        // if user has joined the meet, update time and meetLink
+        document.getElementById("UpdateTime").innerText = moment(Date.now()).format( 'Do MMMM, YYYY h:mm a' );
+        document.getElementById("meetLink").innerText   = " | " + h.getQString( location.href, 'room' );
+
+        async function updateTime(){
+            document.getElementById("UpdateTime").innerText = moment(Date.now()).format( 'Do MMMM, YYYY h:mm a' );
+        }
+
+        setInterval(()=>{
+            updateTime();
+        },1000);
+
     }
+
+
+
 } );

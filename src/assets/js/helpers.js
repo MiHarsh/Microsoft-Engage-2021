@@ -31,7 +31,6 @@ export default {
 
     // Once a user disconnects, remove his video, and
     // adjust the video sizes of other elements.
-    
     closeVideo( elemId,socket ) {
         if ( document.getElementById( elemId ) ) {
             socket.emit("removeMyName",elemId);
@@ -40,8 +39,7 @@ export default {
         }
     },
 
-    // set userNames helper function
-
+    // set userNames helper function, maps videos with usernames
     setUserNames(mapSocketWithNames){
         let current_users =  document.getElementById('videos').children;
         for(var i=0;i<current_users.length;i++){
@@ -57,7 +55,7 @@ export default {
     
 
 
-    // Why do we require this? How would it help us? 
+    // page focus, scroll chat if focus on chat.
     pageHasFocus() {
         return !( document.hidden || document.onfocusout || window.onpagehide || window.onblur );
     },
@@ -135,10 +133,6 @@ export default {
     // each user will have their own screen sharing videos. The output from this 
     // would be sent to other peers. 
 
-    // need a bug fix, if user shares his screen, they should not loose their own videos,
-    // maybe i should have a new tab like feature, switch to shared content, ie, once a user shares screen,
-    // they should broadcast their own video as well as join new video with shared content.
-
     shareScreen() {
         if ( this.userMediaAvailable() ) {
             return navigator.mediaDevices.getDisplayMedia( {
@@ -158,15 +152,7 @@ export default {
         }
     },
 
-    // what are ice servers ? what are their uses ?
-    // We are connected to our routers/other devices, we know our public IPs, but 
-    // we dont have any information about private IPs, how will others connect particularly to us ?
-    // there may be many things connected to the same network.
-
-    // In such cases IceServers are used. They have stun servers, which gives us our local address, which
-    // can be used to connect to others. In some cases, this is also not possible. Hence in such
-    // extremeties, turn servers are used.
-
+    // ice servers, (stun and turn)
     getIceServer() {
         return {
             iceServers: [
@@ -187,55 +173,72 @@ export default {
 
 
 
-    addChat( data, senderType ) {
+    addChat( data, senderType, fromDatabase ) {
+        let chatMsgDiv;
+        let time;
+        if(data.room){
+            // chat is from user homepage
+            chatMsgDiv = document.querySelector( '#chat-messages-'+ data.room );
+        }
+        else{
+            chatMsgDiv = document.querySelector( '#chat-messages' );
+        }
+        time = moment().format( 'Do MMMM, YYYY h:mm a' );
 
 
-        let chatMsgDiv = document.querySelector( '#chat-messages' );
+        if(data.timestamp){
+            time = moment(data.timestamp).format( 'Do MMMM, YYYY h:mm a' );
+        }
+
+        
         let contentAlign = 'justify-content-end';
         let senderName = 'You';
         let msgBg = 'bg-light';
+        let marginContent = 'mr-1';
 
         if ( senderType === 'remote' ) {
 
-            // notify when new message arrives
-            let audio = new Audio('../assets/tones/message.mp3');
-            audio.play();
-
             contentAlign = 'justify-content-start';
+            marginContent = 'ml-1';
             senderName = data.sender;
             msgBg = '';
 
-            this.toggleChatNotificationBadge();
+            // notify when new message arrives, only in meet
+            if(!fromDatabase && !data.room ){
+                // silent data loading when retrieving from database
+                let audio = new Audio('../assets/tones/message.mp3');
+                audio.play();
+    
+                this.toggleChatNotificationBadge();
+            }
+
+
         }
 
         let infoDiv = document.createElement( 'div' );
         infoDiv.className = 'sender-info';
-        infoDiv.innerHTML = `${ senderName } - ${ moment().format( 'Do MMMM, YYYY h:mm a' ) }`;
+
+        infoDiv.innerHTML = `${ senderName } - ${time}`;
 
         let colDiv = document.createElement( 'div' );
         colDiv.className = `col-10 card chat-card msg text-info ${ msgBg }`;
         colDiv.innerHTML = `<b>${xssFilters.inHTMLData( data.msg ).autoLink( { class: "text-info" , target: "_blank", rel: "nofollow"})}</b>`;
 
         let rowDiv = document.createElement( 'div' );
-        rowDiv.className = `row ${ contentAlign } mb-2`;
+        rowDiv.className = `row ${ marginContent } ${ contentAlign } mb-2`;
 
 
         colDiv.appendChild( infoDiv );
         rowDiv.appendChild( colDiv );
-
         chatMsgDiv.appendChild( rowDiv );
 
-        /**
-         * Move focus to the newly added message but only if:
-         * 1. Page has focus
-         * 2. User has not moved scrollbar upward. This is to prevent moving the scroll position if user is reading previous messages.
-         */
+
         if ( this.pageHasFocus ) {
             rowDiv.scrollIntoView();
         }
     },
 
-
+    // when new message arrives
     toggleChatNotificationBadge() {
         if ( document.querySelector( '#chat-pane' ).classList.contains( 'chat-opened' ) ) {
             document.querySelector( '#new-chat-notification' ).setAttribute( 'hidden', true );
@@ -250,18 +253,13 @@ export default {
 
     replaceTrack( stream, recipientPeer ) {
         let sender = recipientPeer.getSenders ? recipientPeer.getSenders().find( s => s.track && s.track.kind === stream.kind ) : false;
-        // let sender = false;
-        // if(recipientPeer.getSenders().find( s => s.track && s.track.kind === stream.kind )){
-        //     sender = recipientPeer.getSenders;
-        // }
+
         if(sender){
             sender.replaceTrack( stream );
         }
-        // sender ? sender.replaceTrack( stream ) : '';
     },
 
     // this adds effects to when we share the screen, for now
-    // it just changes its color, when share, --> blue else white
 
     toggleShareIcons( share ) {
         let shareIconElem = document.querySelector( '#share-screen' );
@@ -280,18 +278,12 @@ export default {
     },
 
 
-    // when screen share is on, this button disables the video on mode
-    // but i should discourage this thing. I should have something like where i could share the screen
-    // discuss this.
-
     toggleVideoBtnDisabled( disabled ) {
         document.getElementById( 'toggle-video' ).disabled = disabled;
     },
 
 
-    // for doing full screen, use this one, change it to pin Option,
-    // current implementation looks very bad.
-
+    // to pinn to screen
     maximiseStream( e ) {
         let elem = e.target.parentElement.previousElementSibling;
         elem.requestFullscreen() || elem.mozRequestFullScreen() || elem.webkitRequestFullscreen() || elem.msRequestFullscreen();
@@ -312,10 +304,9 @@ export default {
         }
     },
 
-
+    // save the recordings
     saveRecordedStream( stream, user ) {
         let blob = new Blob( stream, { type: 'video/webm' } );
-
         let file = new File( [blob], `${ user }-${ moment().unix() }-record.webm` );
 
         saveAs( file );
@@ -345,10 +336,14 @@ export default {
     },
 
 
-    // this would adjust the size of the video, this should be replaced with a good code
+    // this would adjust the size of the video
     adjustVideoElemSize() {
         let elem = document.getElementsByClassName( 'card' );
+        let userlobby = document.getElementById('user-lobby');
         let totalRemoteVideosDesktop = elem.length;
+        if(userlobby.hidden){
+            totalRemoteVideosDesktop -= 1;
+        }
         let newWidth = totalRemoteVideosDesktop <= 2 ? '50%' : (
             totalRemoteVideosDesktop == 3 ? '33.33%' : (
                 totalRemoteVideosDesktop <= 8 ? '25%' : (
@@ -364,18 +359,17 @@ export default {
         );
 
 
-        for ( let i = 0; i < totalRemoteVideosDesktop; i++ ) {
+        for ( let i = 0; i < elem.length; i++ ) {
             elem[i].style.width = newWidth;
         }
+
+        // dont resize admit-card
+        userlobby.style.width = '35%' ;
     },
 
     // will display the popup --->
     askForPoll(){
         document.querySelector(".wrapper").hidden = false;
     },
-
-    // pollListeners(){
-
-    // }
 
 };
