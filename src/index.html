@@ -6,8 +6,8 @@
         <meta content="width=device-width, initial-scale=1" name="viewport" />
 
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous"> -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
         <link rel='stylesheet' href='assets/css/app.css' type="text/css">
 
         <script src='/socket.io/socket.io.js'></script>
@@ -35,7 +35,7 @@
         </div>
 
         <nav class="navbar fixed-bottom badge-dark rounded-0 d-print-none res-nav room-comm" style="background-color: #1c2023;" hidden>
-            <div class="text-white col-md-5 d-none d-md-block" id= "meet-details">
+            <div class="text-white col-md-4 d-none d-md-block" id= "meet-details">
                 <div><span id="UpdateTime"></span><span id="meetLink"></span>                     
                     <button class="btn btn-md text-white pull-right btn-outline-secondary rounded-0" title="Copy Invite Link" id="copyClipboard">
                     <i class="fas fa-clipboard"></i> </button>
@@ -43,24 +43,24 @@
 
             </div>
 
-            <div class="pull-right ml-auto mr-auto col-md-7  ">
-                    <button class="btn btn-lg rounded-0 btn-no-effect" id='toggle-video' title="Hide Video">
+            <div class="pull-right ml-auto mr-auto col-md-8  ">
+                    <button class="btn btn-lg rounded-0 btn-no-effect" style="min-width:80px;" id='toggle-video' title="Hide Video">
                         <i class="fa fa-video text-white"></i>
                     </button>
 
-                    <button class="btn btn-lg rounded-0 btn-no-effect" id='toggle-mute' title="Mute">
+                    <button class="btn btn-lg rounded-0 btn-no-effect" style="min-width:80px;" id='toggle-mute' title="Mute">
                         <i class="fa fa-microphone-alt text-white"></i>
                     </button>
 
-                    <button class="btn btn-lg rounded-0 btn-no-effect" id='share-screen' title="Share screen">
+                    <button class="btn btn-lg rounded-0 btn-no-effect" style="min-width:80px;" id='share-screen' title="Share screen">
                         <i class="fa fa-desktop text-white"></i>
                     </button>
 
-                    <button class="btn btn-lg rounded-0 btn-no-effect" id='record' title="Record">
+                    <button class="btn btn-lg rounded-0 btn-no-effect" style="min-width:80px;" id='record' title="Record">
                         <i class="fa fa-dot-circle text-white"></i>
                     </button>
 
-                    <button class="btn btn-lg text-white pull-right btn-no-effect" id='toggle-chat-pane'>
+                    <button class="btn btn-lg text-white pull-right btn-no-effect" style="min-width:80px;" id='toggle-chat-pane'>
                         <i class="fa fa-comment"></i> <span class="badge badge-danger very-small font-weight-lighter" id='new-chat-notification' hidden>New</span>
                     </button>
 

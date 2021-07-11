@@ -172,7 +172,7 @@ window.addEventListener( 'load', () => {
         function addNewChatsToDatabase(elementId){
 
             document.getElementById( 'chat-input-'+ elementId ).addEventListener( 'keypress', ( e ) => {
-                console.log(e);
+        
                 if ( e.which === 13 && ( e.target.value.trim() ) ) {
                     e.preventDefault();
 

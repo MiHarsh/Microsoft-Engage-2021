@@ -9,7 +9,6 @@
 // they are not extracted as links using autolink, they will appear as simple
 // texts, hence a lot of inconvinience
 
-
 ( function () {
   var autoLink,
     slice = [].slice;

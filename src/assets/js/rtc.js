@@ -4,7 +4,6 @@ import h from './helpers.js';
 
 window.addEventListener( 'load', () => {
 
-    console.log("defined just now");
     const room = h.getQString( location.href, 'room' );
     const username = sessionStorage.getItem( 'username' );
     let usermail = sessionStorage.getItem( 'email' );
@@ -54,16 +53,15 @@ window.addEventListener( 'load', () => {
             } );
 
             // admin would trigger the timer popup, since he'll be present before others join
+            // for now, use 1:30 minutes for Have a break.
             socket.on( 'iAmAdmin',()=>{
                 isAdmin = true;
                 startTime = Date.now();
-                console.log("welcome admin");
 
                 const interval = setInterval(()=>{
-                    if((Date.now() - startTime) > 60*1000){
+                    if((Date.now() - startTime) > 90*1000){
                         socket.emit("sendPollToEveryUser",room);
                         clearInterval(interval);
-                        console.log("send everyone");
                     }
                 },1000);
 
@@ -77,7 +75,7 @@ window.addEventListener( 'load', () => {
                     let socketid_admit = data.socketId;
                     let roomName_admit = data.room;
 
-                    // ############################### Fresh Code ###########################
+                    // ###############################  ###########################
                     
                     let base_container = document.getElementById("user-admit");
                     let newRequestElement = document.createElement("div");
@@ -235,7 +233,6 @@ window.addEventListener( 'load', () => {
                 let audio = new Audio('../assets/tones/user-joined.mp3');
                 audio.play();
 
-                console.log(data);
                 socket.emit( 'newUserStart', { to: data.socketId, sender: socketId } );
                 pc.push( data.socketId );
                 init( true, data.socketId );
@@ -402,8 +399,6 @@ window.addEventListener( 'load', () => {
 
             //add
             pc[partnerName].ontrack = ( e ) => {
-                console.log(partnerName);
-                console.log(e);
                 let str = e.streams[0];
                 if ( document.getElementById( `${ partnerName }-video` ) ) {
                     document.getElementById( `${ partnerName }-video` ).srcObject = str;
@@ -460,7 +455,7 @@ window.addEventListener( 'load', () => {
             };
 
 
-
+            // signaling state change
             pc[partnerName].onsignalingstatechange = ( d ) => {
                 switch ( pc[partnerName].signalingState ) {
                     case 'closed':

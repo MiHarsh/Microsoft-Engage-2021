@@ -50,8 +50,7 @@
 
 .modal {
   width: 400px;
-  background: linear-gradient(rgba(148, 42, 42, 0.8), rgba(185, 129, 129, 0.6)),
-    url(images/bg.jpg) center no-repeat;
+  background: linear-gradient(rgba(148, 42, 42, 0.8), rgba(185, 129, 129, 0.6));
   background-size: cover;
   position: absolute;
   top: 50%;

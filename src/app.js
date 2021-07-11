@@ -64,11 +64,6 @@ var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
 
-// whenever get request is recieved on Server on join endpoint, render index.html file
-app.get( '/join', ( req, res ) => {
-    res.sendFile( __dirname + '/index.html' );
-});
-
 let bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
@@ -78,6 +73,11 @@ app.use(bodyparser.json());
 app.get('/login',(req,res)=>{
     res.render( __dirname + '/form.html',{room:req.query.room} );
 })
+
+// whenever get request is recieved on Server on join endpoint, render index.html file
+app.get( '/join', ( req, res ) => {
+    res.sendFile( __dirname + '/index.html' );
+});
 
 
 // user signs up
@@ -162,21 +162,7 @@ app.post('/joinRoom',(req,res)=>{
 });
 
 
-
-
-
-
-// when /stream namespace would be connected, then a stream callback is given 
-// What do you expect it to do ?
-
-// -->
-// the server would listen to any message which is sent to server, also it would listen to other 
-// socket to join, would have details such as their socket ids, as well as send datas to different
-// peoples
-
-// What does that callback actually do?
- 
-
+// main namespace for the meet functionality --------> 
 io.of( '/stream' ).on( 'connection', (socket)=>{
     socket.on( 'subscribe', ( data ) => {
 
@@ -191,7 +177,6 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
             // if only single user is present, he'll be admin --->
             socket.emit('iAmAdmin');
 
-
         }
         else{
             //Inform admin in the room of new user's arrival
@@ -200,7 +185,6 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
 
         // if a room doesn't exist, then vote_counts should be zero
-
         if(!vote_counts[data.room]){
             vote_counts[data.room] = 0;
         }
@@ -210,7 +194,7 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
     });
 
-    // if access is granted, the user can connect// here this socket is admin one
+    // if access is granted, the user can connect (here this socket, which replies is admin)
     // so admin would inform the requesting participant that -- access has been granted
     socket.on('access-granted',(data)=>{
         socket.to( data.socketId ).emit( 'access has been granted',data);
@@ -241,31 +225,25 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
     });
 
     // send details of new user to previously present sockets
-    // contains --> to and sender 
-    // to is socket ids which are present previously
-    // and sender is new one
 
     socket.on( 'newUserStart', ( data ) => {
         socket.to( data.to ).emit( 'newUserStart', { sender: data.sender } );
     } );
 
 
-    // what a sdp is ? What do we do with that information ?
-    // sdp is session description protocol, contains all the information about medias, streams etc
-
+    // session description protocol, contains all the information about medias, streams etc
     socket.on( 'sdp', ( data ) => {
         socket.to( data.to ).emit( 'sdp', { description: data.description, sender: data.sender } );
     } );
 
     // once the public address are known using stun and turn servers, we share ice candidates to
     // create the connection.
-
     socket.on( 'ice candidates', ( data ) => {
         socket.to( data.to ).emit( 'ice candidates', { candidate: data.candidate, sender: data.sender } );
     } );
 
 
-    // simple socket.io chat app, here only one namespace and room is present.  
+    // chat
     socket.on( 'chat', ( data ) => {
 
         // send message only if socket is present in the room
@@ -290,7 +268,6 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         
         io.of('/user').to(data.room).emit('chat',snd);
 
-        
     } );
 
 
@@ -327,9 +304,9 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
 
 
 
-// user
+// user-dashboard namespace
 io.of('/user').on('connection',(socket)=>{
-    console.log("new socket connected",socket.id);
+    
     let users = '';
     let room_details = '';
 
