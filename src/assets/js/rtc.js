@@ -13,6 +13,7 @@ window.addEventListener( 'load', () => {
         usermail = "unknown";
     }
 
+    // if room is not defined
     if ( !room ) {
         document.querySelector( '#room-create' ).attributes.removeNamedItem( 'hidden' );
     }
@@ -147,6 +148,16 @@ window.addEventListener( 'load', () => {
                 }
             });
 
+            // ########################################################################
+            // if admin denied access -->
+
+            socket.on('access-denied',()=>{
+                document.getElementById('acc-denied').hidden = false;
+            });
+
+            document.getElementById('back-to-dashboard').addEventListener('click',()=>{
+                window.location.href =  "/dashboard";
+            });
 
             //##########################################################################
 
@@ -419,7 +430,7 @@ window.addEventListener( 'load', () => {
 
                     //create a new div for card
                     let cardDiv = document.createElement( 'div' );
-                    cardDiv.className = 'card card-sm';
+                    cardDiv.className = 'card card-sm vid-card';
                     cardDiv.id = partnerName;
                     cardDiv.appendChild( newVid );
                     cardDiv.appendChild( controlDiv );
@@ -714,11 +725,11 @@ window.addEventListener( 'load', () => {
         });
 
         // if user has joined the meet, update time and meetLink
-        document.getElementById("UpdateTime").innerText = new Date().toLocaleTimeString();
+        document.getElementById("UpdateTime").innerText = moment(Date.now()).format( 'Do MMMM, YYYY h:mm a' );
         document.getElementById("meetLink").innerText   = " | " + h.getQString( location.href, 'room' );
 
         async function updateTime(){
-            document.getElementById("UpdateTime").innerText = new Date().toLocaleTimeString();
+            document.getElementById("UpdateTime").innerText = moment(Date.now()).format( 'Do MMMM, YYYY h:mm a' );
         }
 
         setInterval(()=>{

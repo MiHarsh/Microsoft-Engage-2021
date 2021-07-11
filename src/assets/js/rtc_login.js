@@ -108,7 +108,7 @@ window.addEventListener( 'load', () => {
 
         document.getElementById('getACode').addEventListener('click',()=>{
             let randomRoomCode = h.generateRandomString();
-            document.getElementById('showACode').innerHTML = `Room Code: <span style="color:#5bc0de">${randomRoomCode}</span>`;
+            document.getElementById('showACode').innerHTML = `Room Code: <span style="color: #0e637d">${randomRoomCode}</span>`;
             document.getElementById('copyIcon').innerHTML = `<a class="mr-2 btn btn-sm btn-outline-info rounded-0 " title="Copy Invite Link" id="cc-meet-${randomRoomCode}">
             <i class="fas fa-2x fa-copy"></i></a>`;
             
@@ -235,7 +235,14 @@ window.addEventListener( 'load', () => {
             // when copy to clipboard is clicked --->
             document.getElementById('cc-' + roomName).addEventListener('click',()=>{
                 const el = document.createElement('textarea');
-                el.value = location.href.split("/dashboard")[0] + "/login?room=" + roomName.split("meet-")[1] ;
+                let splt = roomName.split("meet-");
+                if(splt.length === 2){
+                    el.value = location.href.split("/dashboard")[0] + "/login?room=" + roomName.split("meet-")[1] ;
+                }
+                else{
+                    el.value = location.href.split("/dashboard")[0] + "/login?room=" + roomName;
+                }
+                
                 el.setAttribute('readonly', '');
                 el.style.position = 'absolute';
                 el.style.left = '-9999px';

@@ -25,16 +25,16 @@
         <div class="page-wrapper bg1" id='recording-options-modal' >
             <div class="p-4 bg-changer" > 
                 <div class="form-group col-md-12 pt-2" >
-                    <button class="btn-sm btn-outline-info rounded-lg mr-4" id='record-video'>Record Video</button>
-                    <button class="btn-sm btn-outline-info rounded-lg" id='record-screen'>Record Screen</button>
+                    <button class="btn-md btn-info rounded-lg mr-4" id='record-video'>Record Video</button>
+                    <button class="btn-md btn-info rounded-lg" id='record-screen'>Record Screen</button>
                 </div> 
-                <button class="btn-sm btn-outline-danger rounded-lg" id='closeModal'>close</button>
+                <button class="btn-md btn-danger rounded-lg" id='closeModal'>close</button>
                 
                 
             </div>
         </div>
 
-        <nav class="navbar fixed-bottom badge-dark bg-dark rounded-0 d-print-none res-nav room-comm" hidden>
+        <nav class="navbar fixed-bottom badge-dark rounded-0 d-print-none res-nav room-comm" style="background-color: #1c2023;" hidden>
             <div class="text-white col-md-5 d-none d-md-block" id= "meet-details">
                 <div><span id="UpdateTime"></span><span id="meetLink"></span>                     
                     <button class="btn btn-md text-white pull-right btn-outline-secondary rounded-0" title="Copy Invite Link" id="copyClipboard">
@@ -65,24 +65,24 @@
                     </button>
 
                 <button class="btn btn-lg rounded-0 btn-no-effect text-white">
-                    <a href="/join" class="text-white text-decoration-none"><i class="fa fa-sign-out-alt text-white" title="Leave"></i></a>
+                    <a href="/dashboard" class="text-white text-decoration-none"><i class="fa fa-sign-out-alt text-white" title="Leave"></i></a>
                 </button>
             </div>
+
         </nav>
 
-        <div class="container-fluid" id='room-create' style="background-color:white;" hidden>
+        <div class="container-fluid meet-set" id='room-create' hidden>
             <div class="row">
-                <div class="col-12 h2 mt-5 text-center">Create Room</div>
+                <div class="col-12 h2 mt-5 text-center">Create An Instant Room</div>
             </div>
             
-            <div class="row mt-2" >
+            <div class="row mt-2"  style="text-align: center;" >
                 <div class="col-12 text-center">
                     <span class="form-text small text-danger" id='err-msg'></span>
                 </div>
 
-
                 <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <button id='create-room' class="btn btn-block rounded-0 btn-secondary">Create Room</button>
+                    <button id='create-room' class="btn rounded-0 btn-info">Create Room</button>
                 </div>
 
                 <div class="col-12 col-md-4 offset-md-4 mb-3" id='room-created'></div>
@@ -91,33 +91,32 @@
 
 
 
-        <div class="container-fluid" id='username-set' style="background-color:white;" hidden>
+        <div class="container-fluid meet-set" id='username-set' hidden>
             <div class="row">
-                <div class="col-12 h4 mt-5 text-center">Your Name</div>
+                <div class="col-12 h4 mt-5 text-center">Enter Your Name</div>
             </div>
             
-            <div class="row mt-2">
+            <div class="row mt-2" style="text-align: center;">
                 <div class="col-12 text-center">
                     <span class="form-text small text-danger" id='err-msg-username'></span>
                 </div>
 
                 <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <label for="username">Your Name</label>
                     <input type="text" id='username' class="form-control rounded-0" placeholder="Your Name">
                 </div>
 
                 <div class="col-12 col-md-4 offset-md-4 mb-3">
-                    <button id='enter-room' class="btn btn-block rounded-0 btn-secondary">Enter Room</button>
+                    <button id='enter-room' class="btn rounded-0 btn-info" >Enter Room</button>
                 </div>
             </div>
         </div>
 
         <!-- Show participants requests to admin to join the meet -->
-
-        <div class="col-lg-12 col-sm-11   pt-4 pb-3 align-center " >
+        <div class="col-lg-12 col-sm-11   pt-4 pb-3 align-center " style="position: absolute;
+        z-index: 30000;">
 
             <!-- div when only multiple request is there -->
-            <div class="card py-3  mx-auto admit" id="user-lobby" hidden >
+            <div class="card py-3  mx-auto admit" id="user-lobby" style="width: 35%;" hidden >
                 <div class=" px-2 text-center ">
                     <h4><span id="who" >Someone wants</span> to join this call</h4>
                 </div>
@@ -134,10 +133,27 @@
             </div>
           
         </div>
-                  
-                  
             
         <!-- ################################################# -->
+
+        <!-- Access Denied -->
+
+        <div class="wrapper-access-denied" id="acc-denied" hidden>
+            <div class="poll-box" >
+                <div class="poll-container">
+                    <div class="poll-question">You have been denied by the admin.</div>
+                    <div class="poll-panel row mt-30">
+                        <div class="btn poll-panel-btn" aria-role="button" data-result="0" data-vote="0" id="back-to-dashboard" > <span>Back to Dashboard</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ends Here -->
+            
+        <!-- ################################################# -->
+
+
         
         <!-- ################################################# -->
 
@@ -179,7 +195,7 @@
             <div class="row">
                 <div class="col-md-12 main" id='main-section'>                    
                     <div class="row mt-2 mb-2" id='videos'>
-                        <div class="card card-sm" id="loc-vid">
+                        <div class="card card-sm vid-card" id="loc-vid">
                             <video class="loc-video mirror-mode" id='local' volume='0' autoplay muted></video>
                             <div class= "participant-names">You</div>
                         </div>
