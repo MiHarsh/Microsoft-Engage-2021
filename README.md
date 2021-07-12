@@ -1,3 +1,28 @@
+# <p align ="center" >Microsoft Teams Clone</p>
+## <p align ="center" >Meet, chat, call, and collaborate in just one place.</p>
+
+## Table of Contents 📕
+
+- [About the Challenge](#microsoft-engage-2021)
+- [Features](#features-)
+  	- [Homepage](#homepage)
+  	- [Dashboard](#dashboard)
+  	- [Meet](#meet)
+- [Discussions](#discussions)
+  - [Adding new members to a Room](#adding-new-members-to-a-room)
+  - [Loading Previous Chats](#loading-previous-chats)
+  - [Have-a-break Functionality](#have-a-break-functionality)
+  - [User Dashboard and Meet Syncing](#user-dashboard-and-meet-syncing)
+  - [Number of Rooms which could be created parallely](#number-of-rooms-which-could-be-created-parallely)
+- [Future Work](#future-work)
+- [References](#references)
+
+# Microsoft Engage-2021
+* The Challenge
+	* Build a Microsoft Teams clone
+	* Your solution should be a fully functional prototype with at least one mandatory functionality - a minimum of two participants should be able connect with each other using your product to have a video conversation.
+	* Adapt Feature: Include a chat feature in your application where meeting participants can share info without disrupting the flow of the meeting
+
 # Features :
 
 ## Homepage
@@ -50,7 +75,7 @@
 	*	Poll visible only to the participants, hence no interruption to the admin.
 	*	Once more than 50% of the current participants vote for a break, admin would be notified.
 
-## Discussions
+# Discussions
 * ### Adding new members to a Room.
 	* Option 1:
 		* Admin adds using email ID.
@@ -74,6 +99,26 @@
 		* How does this helps ? 
 			* Chats are loaded as per user's requirement, hence faster loading time.
 			* Server requests decreases at a significant level.
+* ### Have-a-break Functionality
+	* Implementation Details:
+		* Admin joins the room. A timer continuously monitor's meet on-timing.
+		* Once the on-time equals defined period of time ie. 90 sec (as of now) , admin (socket) triggers server to send popups to other users. This could be easily done using 
+		` socket.to(roomName).emit('askForPoll'); ` 
+		* Every time the clients recieve this event, a popup is raised, and the votes are stored.
+		* When more than 50% of the current participants request for break, a popup is sent to admin.
+		`socket.to(adminOfRoom[data.room]).emit("adminGiveABreak");`
+* ### User Dashboard and Meet Syncing
+	* We primarily needed a new feature (Adapt phase) which could allow users
+		* View & Send messages.  
+		* Continue the conversation after the meeting.
+		* Start the conversation before the meeting.
+	* I have used two namespaces, `/stream` for meeting and `/user` for dashboard  chats.
+	* Socket io provides easy way to share data between two namespaces
+	`io.of('/stream').to(data.room).emit('chat',{  sender: data.sendername,  msg: data.message  });` 
+	This could share data from `/user` namespace to `/stream` namespace.
+	* Hence integration of *Adapt* feature with the current implementation, was very easy.
+* ### Number of Rooms which could be created parallely
+	* The current Webapp has been implemented in such a way that it could support multiple meetings, each consisting of multiple users simultaneously. 
 
 * ### Implementation Details
 	* Tech Stacks Used:
@@ -82,3 +127,12 @@
 		* Firebase ( for Database )
 		*  Node, express JS (Server)
 		* HTML, CSS
+
+# Future Work
+* Include Background blur/change functionality.
+* Stream Video and Screen share simultaneously.
+
+# References
+* https://www.udemy.com/course/socketio-with-websockets-the-details/
+* https://www.udemy.com/course/practical-webrtc-a-complete-webrtc-bootcamp-for-beginners/
+* https://www.codeproject.com/Articles/1073738/Building-a-Video-Chat-Web-App-with-WebRTC
