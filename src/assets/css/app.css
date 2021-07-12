@@ -26,7 +26,7 @@
 }
 
 #chat-messages{
-    height: 65vh;
+    height: 68.5vh;
     margin-bottom: 20px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -107,26 +107,36 @@
     z-index:300000;
     padding: 10px 10px;
     min-width: 80px;
-    width:25%;
+    width:10vw;
     text-align: center;
     visibility: hidden;
     border-radius: 8px;
 }
 
+@media  (max-width:768px){
+    .remote-video-controls{
+        width: 15vw;
+    }
+    }
+
+
+
 /* css for displaying remote names */
 .participant-names{
     position:absolute;
-    top:88%;
+    bottom:0;
     left:17%;
     transform: translate(-50%,-50%);
     background-color:rgba(0, 0, 0, 0.5);
     z-index:299999;
-    padding: 10px 10px;
+    padding: 5px 5px;
     min-width: 80px;
     width:25%;
     text-align: center;
     color:white;
     border-radius: 8px;
+    text-transform: capitalize;
+    font-size: 0.9rem;
 }
 
 

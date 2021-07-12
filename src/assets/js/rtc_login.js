@@ -219,7 +219,7 @@ window.addEventListener( 'load', () => {
                     
                         <div class="col-12 text-center h3 mb-3 mt-2">CHAT</div>
 
-                        <div id='chat-messages-${roomName}' style = " overflow-y: scroll;height: 73vh;overflow-x: hidden;" ></div>
+                        <div id='chat-messages-${roomName}' style = " overflow-y: scroll;height: 73vh;overflow: hidden;" ></div>
 
                         <div class="mb-2 px-2 input-group" style="position: absolute; bottom: 0;" >
                             <input type="text" id='chat-input-${roomName}' class="col-11 form-control rounded-2 border-info" name="lname" placeholder="Type here...">

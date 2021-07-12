@@ -606,19 +606,19 @@ window.addEventListener( 'load', () => {
         document.getElementById( 'toggle-video' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
 
-            let elem = document.getElementById( 'toggle-video' );
+            let elem = document.getElementById( 'toggle-video' ).children[0];
 
             if ( myStream.getVideoTracks()[0].enabled ) {
-                e.target.classList.remove( 'fa-video' );
-                e.target.classList.add( 'fa-video-slash' );
+                elem.classList.remove( 'fa-video' );
+                elem.classList.add( 'fa-video-slash' );
                 elem.setAttribute( 'title', 'Show Video' );
 
                 myStream.getVideoTracks()[0].enabled = false;
             }
 
             else {
-                e.target.classList.remove( 'fa-video-slash' );
-                e.target.classList.add( 'fa-video' );
+                elem.classList.remove( 'fa-video-slash' );
+                elem.classList.add( 'fa-video' );
                 elem.setAttribute( 'title', 'Hide Video' );
 
                 myStream.getVideoTracks()[0].enabled = true;
@@ -632,19 +632,20 @@ window.addEventListener( 'load', () => {
         document.getElementById( 'toggle-mute' ).addEventListener( 'click', ( e ) => {
             e.preventDefault();
 
-            let elem = document.getElementById( 'toggle-mute' );
+            let elem = document.getElementById( 'toggle-mute' ).children[0];
 
             if ( myStream.getAudioTracks()[0].enabled ) {
-                e.target.classList.remove( 'fa-microphone-alt' );
-                e.target.classList.add( 'fa-microphone-alt-slash' );
+               
+                elem.classList.remove( 'fa-microphone-alt' );
+                elem.classList.add( 'fa-microphone-alt-slash' );
                 elem.setAttribute( 'title', 'Unmute' );
 
                 myStream.getAudioTracks()[0].enabled = false;
             }
 
             else {
-                e.target.classList.remove( 'fa-microphone-alt-slash' );
-                e.target.classList.add( 'fa-microphone-alt' );
+                elem.classList.remove( 'fa-microphone-alt-slash' );
+                elem.classList.add( 'fa-microphone-alt' );
                 elem.setAttribute( 'title', 'Mute' );
 
                 myStream.getAudioTracks()[0].enabled = true;

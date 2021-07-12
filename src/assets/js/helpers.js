@@ -338,12 +338,9 @@ export default {
 
     // this would adjust the size of the video
     adjustVideoElemSize() {
-        let elem = document.getElementsByClassName( 'card' );
-        let userlobby = document.getElementById('user-lobby');
+        let elem = document.getElementsByTagName( 'video' );
         let totalRemoteVideosDesktop = elem.length;
-        if(userlobby.hidden){
-            totalRemoteVideosDesktop -= 1;
-        }
+     
         let newWidth = totalRemoteVideosDesktop <= 2 ? '50%' : (
             totalRemoteVideosDesktop == 3 ? '33.33%' : (
                 totalRemoteVideosDesktop <= 8 ? '25%' : (
@@ -360,11 +357,8 @@ export default {
 
 
         for ( let i = 0; i < elem.length; i++ ) {
-            elem[i].style.width = newWidth;
+            elem[i].parentElement.style.width = newWidth;
         }
-
-        // dont resize admit-card
-        userlobby.style.width = '35%' ;
     },
 
     // will display the popup --->
