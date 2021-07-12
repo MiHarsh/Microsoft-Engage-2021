@@ -87,24 +87,29 @@ app.post('/signup', function(req,res){
     var email =req.body.email.split("@")[0];
     var pass = req.body.password;
     let all_users = dbRef.child("users");
-    all_users.once('value',(e)=>{
-        if(e.val()[email]){
-            res.render( __dirname + '/form.html',{room:req.query.room} );
-        }
-        if(req.query.room){
-            
-            // store in database
-            dbRef.child("users").child(email).set({rooms:[email,req.query.room],
-                username:name, password:pass });
-        }
-        else{
-            dbRef.child("users").child(email).set({rooms:[email],
-                username:name, password:pass });
-        }
-        res.cookie('name', name);
-        res.cookie('email',email);
-        return res.redirect('/dashboard');
-    });
+
+    try{
+        all_users.once('value',(e)=>{
+            if(e.val()[email]){
+                res.render( __dirname + '/form.html',{room:req.query.room} );
+            }
+            if(req.query.room){
+                
+                // store in database
+                dbRef.child("users").child(email).set({rooms:[email,req.query.room],
+                    username:name, password:pass });
+            }
+            else{
+                dbRef.child("users").child(email).set({rooms:[email],
+                    username:name, password:pass });
+            }
+            res.cookie('name', name);
+            res.cookie('email',email);
+            return res.redirect('/dashboard');
+        });
+    }catch (e){
+        console.log(e);
+    }
 
 });
 
@@ -117,31 +122,37 @@ app.post('/signin', function(req,res){
 
     //check whether user is member or not 
     let all_users = dbRef.child("users");
-    all_users.once('value',(e)=>{
+
+    try{
+        all_users.once('value',(e)=>{
         
-        if(e.val()[email]){
-            if(e.val()[email]["password"] === pass){
-
-                if(req.query.room){
-                    // store in database
-                    room_ref = dbRef.child("users").child(email).child('rooms');
+            if(e.val()[email]){
+                if(e.val()[email]["password"] === pass){
     
-                    room_ref.once('value',(rm)=>{
-                        let currentRoomsLength = Object.keys(rm.val()).length;
-
-                        if(!Object.values(rm.val()).includes(req.query.room)){
-                            room_ref.child(String(currentRoomsLength)).set(req.query.room);
-                        }
-                        
-                    });
+                    if(req.query.room){
+                        // store in database
+                        room_ref = dbRef.child("users").child(email).child('rooms');
+        
+                        room_ref.once('value',(rm)=>{
+                            let currentRoomsLength = Object.keys(rm.val()).length;
+    
+                            if(!Object.values(rm.val()).includes(req.query.room)){
+                                room_ref.child(String(currentRoomsLength)).set(req.query.room);
+                            }
+                            
+                        });
+                    }
+                    res.cookie('name', e.val()[email]["username"]);
+                    res.cookie('email',email);
+                    return res.redirect('/dashboard');
                 }
-                res.cookie('name', e.val()[email]["username"]);
-                res.cookie('email',email);
-                return res.redirect('/dashboard');
             }
-        }
-        res.sendFile( __dirname + '/form.html' );
-    });
+            res.sendFile( __dirname + '/form.html' );
+        });
+    }catch(e){
+        console.log(e);
+    }
+   
     
 });
 
