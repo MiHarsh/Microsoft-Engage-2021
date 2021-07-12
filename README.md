@@ -74,6 +74,26 @@
 		* How does this helps ? 
 			* Chats are loaded as per user's requirement, hence faster loading time.
 			* Server requests decreases at a significant level.
+* ### Have-a-break Functionality
+	* Implementation Details:
+		* Admin joins the room. A timer continuously monitor's meet on-timing.
+		* Once the on-time equals defined period of time ie. 90 sec (as of now) , admin (socket) triggers server to send popups to other users. This could be easily done using 
+		` socket.to(roomName).emit('askForPoll'); ` 
+		* Every time the clients recieve this event, a popup is raised, and the votes are stored.
+		* When more than 50% of the current participants request for break, a popup is sent to admin.
+		`socket.to(adminOfRoom[data.room]).emit("adminGiveABreak");`
+* ### User Dashboard and Meet Syncing
+	* We primarily needed a new feature (Adapt phase) which could allow users
+		* View & Send messages.  
+		* Continue the conversation after the meeting.
+		* Start the conversation before the meeting.
+	* I have used two namespaces, `/stream` for meeting and `/user` for dashboard  chats.
+	* Socket io provides easy way to share data between two namespaces
+	`io.of('/stream').to(data.room).emit('chat',{  sender: data.sendername,  msg: data.message  });` 
+	This could share data from `/user` namespace to `/stream` namespace.
+	* Hence integration of *Adapt* feature with the current implementation, was very easy.
+* ### Number of Rooms which could be created in parallel
+	* The current Webapp has been implemented in such a way that it could support multiple meetings, each consisting of multiple users simultaneously. 
 
 * ### Implementation Details
 	* Tech Stacks Used:
