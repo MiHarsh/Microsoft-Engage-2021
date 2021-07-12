@@ -4,6 +4,7 @@
 ## Table of Contents 📕
 
 - [About the Challenge](#microsoft-engage-2021)
+- [Agile development methodology](#agile-development-methodology)
 - [Features](#features-)
   	- [Homepage](#homepage)
   	- [Dashboard](#dashboard)
@@ -22,6 +23,19 @@
 	* Build a Microsoft Teams clone
 	* Your solution should be a fully functional prototype with at least one mandatory functionality - a minimum of two participants should be able connect with each other using your product to have a video conversation.
 	* Adapt Feature: Include a chat feature in your application where meeting participants can share info without disrupting the flow of the meeting
+
+
+# Agile development Methodology
+
+* I divided the one-month program into four sprints. Each sprint consisted of one week period.
+* I categorized my sprints into four sections - exploration, basic working model, features creation, adapt phase.
+* We were given a problem statement in which we had to make a web app that could connect two users over a video call.
+* After researching, I found that most of the video calling apps used WebRTC and socket io.
+* In the second week, I created an elementary two-person video call app with a chat feature available.
+* In the third week, I scaled it to multiple users and added custom functionalities such as have-a-break. We will talk about this in a different section.
+* In the fourth week, ie. Adapt phase, we had to create a web app that could store meeting chats, and persons could chat before and after the meet without disrupting the flow.
+
+ So, to adapt to the changes quickly, I used the baseline app created in week 2, and with a few modifications, I was quickly able to develop the adapt feature.
 
 # Features :
 
