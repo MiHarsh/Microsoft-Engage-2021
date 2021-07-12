@@ -292,7 +292,7 @@ io.of( '/stream' ).on( 'connection', (socket)=>{
         vote_counts[data.room] += data.vote;
 
         if(2*vote_counts[data.room] +1 >socket.adapter.rooms[data.room].length){
-            socket.to(data.room).emit("adminGiveABreak");
+            socket.to(adminOfRoom[data.room]).emit("adminGiveABreak");
             vote_counts[data.room] = 0;
         }
         

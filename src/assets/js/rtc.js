@@ -218,11 +218,9 @@ window.addEventListener( 'load', () => {
                 });
             });
 
-            // tell admin to give break :)
+            // tell admin to give break , 
             socket.on('adminGiveABreak',()=>{
-                if(isAdmin){
-                    document.querySelector(".wrapper-admin").hidden = false;
-                }
+                document.querySelector(".wrapper-admin").hidden = false;
             });
 
 
