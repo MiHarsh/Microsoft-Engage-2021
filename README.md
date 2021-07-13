@@ -1,6 +1,10 @@
 # <p align ="center" >Microsoft Teams Clone</p>
 ## <p align ="center" >Meet, chat, call, and collaborate in just one place.</p>
 
+<p align ="center" ><img src="https://i.imgur.com/TmY0Fp9.jpg" height="350px" alt="Homepage"/></p>
+<p align ="center" ><a href="https://m-teams.herokuapp.com/">WebApp Link</a></p>
+
+
 ## Table of Contents 📕
 
 - [About the Challenge](#microsoft-engage-2021)
@@ -16,6 +20,7 @@
   - [User Dashboard and Meet Syncing](#user-dashboard-and-meet-syncing)
   - [Number of Rooms which could be created parallely](#number-of-rooms-which-could-be-created-parallely)
 - [Future Work](#future-work)
+- [Gallery](#gallery)
 - [References](#references)
 
 # Microsoft Engage-2021
@@ -145,6 +150,14 @@
 # Future Work
 * Include Background blur/change functionality.
 * Stream Video and Screen share simultaneously.
+
+# Gallery
+
+| | | |
+|:-------------------------:|:-------------------------:|:-------------------------:|
+|<img width="1604" alt="Join meeting instantly" src="https://imgur.com/w21XfmI.jpg">  Join Meeting |  <img width="1604" alt="sign in" src="https://imgur.com/KOR7i0Y.jpg"> Login/SignUp |<img width="1604" alt="Homepage" src="https://i.imgur.com/TmY0Fp9.jpg"> Homepage|
+|<img width="1604" alt="Chatroom" src="https://imgur.com/3gRTIfX.jpg"> Chatroom |  <img width="1604" alt="schedule a new meet" src="https://imgur.com/xVNyZYg.jpg">Schedule a meet|<img width="1604" alt="Join a meet" src="https://imgur.com/bTFKBfC.jpg"> Join a meet|
+|<img width="1604" alt="Calender Widget" src="https://imgur.com/gZhdmkX.jpg"> Calender Widget |  <img width="1604" alt="themes settings" src="https://imgur.com/RL7dWFj.jpg"> Settings Page|<img width="1604" alt="meet-UI" src="https://imgur.com/WLmc6VW.jpg"> Meet UI|
 
 # References
 * https://www.udemy.com/course/socketio-with-websockets-the-details/
