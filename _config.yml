@@ -1,1 +1,14 @@
+title: Teams Clone
+description: A Microsoft Teams Clone App
 theme: jekyll-theme-cayman
+github:
+  zip_url: https://github.com/MiHarsh/Microsoft-Engage-2021/archive/refs/heads/main.zip
+  tar_url: https://github.com/MiHarsh/Microsoft-Engage-2021/tarball/main
+  clone_url: https://github.com/MiHarsh/Microsoft-Engage-2021.git
+  owner_url: https://github.com/MiHarsh
+show_downloads: true
+
+plugins:
+  - jekyll-seo-tag
+  
+image: https://github.com/MiHarsh/MiHarsh.github.io/blob/main/image/me.jpeg
