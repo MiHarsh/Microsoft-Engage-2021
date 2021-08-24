@@ -1,5 +1,5 @@
-# <p align ="center" >Microsoft Teams Clone</p>
-## <p align ="center" >Meet, chat, call, and collaborate in just one place.</p>
+# Microsoft Teams Clone
+## Meet, chat, call, and collaborate in just one place.
 
 <p align ="center" ><img src="https://i.imgur.com/TmY0Fp9.jpg" height="350px" alt="Homepage"/></p>
 <p align ="center" ><a href="https://m-teams.herokuapp.com/">WebApp Link</a> | <a href="https://www.youtube.com/watch?v=BpAVZUF0sgg">Presentation Video</a> | <a href="https://docs.google.com/presentation/d/1XNuKtABNHNU-VGA6_c8PXoDgif96i2Bxfzxertny7Zo/edit?usp=sharing">Presentation</a></p>
